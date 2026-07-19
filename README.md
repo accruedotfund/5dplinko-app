@@ -24,3 +24,11 @@ npx vercel deploy --prod --yes
 ```
 
 Contract source: `contract/plinko5d.js` in deploy history / ProofNetwork id 1266+.
+
+<!-- hypertribe:sponsors:start -->
+## Sponsors
+
+[![5dplinko-app Sponsors](https://api.tribe.run/tokens/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP/sponsors.svg)](https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP)
+
+Become a sponsor on [Tribe.run](https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP).
+<!-- hypertribe:sponsors:end -->
