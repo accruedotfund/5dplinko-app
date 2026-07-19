@@ -1,65 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5dplinko.app</title><!--5dplinko</title>
-  <meta name="description" content="5dplinko.app — multiplayer physics Plinko on ProofNetwork." />
-  <!-- apply the saved theme BEFORE paint to avoid a flash of the default -->
-  <script>try{var t=localStorage.getItem('prooffront:theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
-
-  <link rel="stylesheet" href="./styles/fonts.css" />
-  <link rel="stylesheet" href="./styles/tokens.css" />
-  <link rel="stylesheet" href="./styles/themes.css" />
-  <link rel="stylesheet" href="./styles/base.css" />
-  <link rel="stylesheet" href="./styles/components.css" />
-  <link rel="stylesheet" href="./styles/animations.css" />
-
-  <!-- The ONE dependency: proofwallet's CryptoClient (vendored, pinned for our ES modules). -->
-  <script src="./vendor/wallet.js"></script>
-  <script>window.CryptoClient = CryptoClient;</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>5dplinko.app</title>
+  <meta name="description" content="5dplinko.app — multiplayer pot Plinko. Bet SOL, shared pot, live wins." />
+  <meta name="theme-color" content="#05070b" />
+  <link rel="stylesheet" href="./play.css" />
 </head>
-<body data-app-root="plinko">
-  <!-- full-screen canvas: no topbar. proofwallet's connect button floats top-right;
-       build your scene (a scene/bg-video backdrop + hotspots/sprites/effects) into #app.
-       (Fixed full-screen components — scene, hotspots, timeline, … — portal themselves
-       to <body>, so #app just needs to exist.) -->
-  <style>html,body{margin:0;height:100%;background:#05070b;overflow:hidden;} #wallet-button{display:none!important;}</style>
-  <div id="wallet-button" data-region="wallet-button"></div>
-
-  <main id="app" data-region="app"></main>
-
-  <!-- animated boot screen (overlays until the app signals ready) -->
-  <div id="pf-boot" class="pf-boot-screen" data-region="boot">
-    <div class="pf-boot__inner" data-role="boot-inner">
-      <div class="pf-boot__brand" data-role="boot-brand">5dplinko</div>
-      <div class="pf-boot__bar" data-role="boot-bar"><span class="pf-boot__fill" data-role="boot-fill"></span></div>
-      <div class="pf-boot__status" data-role="boot-status">booting…</div>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <header class="top">
+    <div class="brand">
+      <h1>5d<span>plinko</span>.app</h1>
+      <p class="tag">multiplayer pot · VRF bins · shared reserve</p>
     </div>
-  </div>
+    <div id="wallet-button"></div>
+  </header>
 
-  <!-- Entry point: read the manifest (data) and run it -->
-  <script type="module" data-role="entry">
-    import { boot } from './src/boot.js';
-    import { manifest } from './src/plinko.manifest.js';
+  <main class="layout">
+    <section class="stage">
+      <div class="vitals">
+        <div class="vital"><span class="k">Free pot</span><span class="v" id="statPot">—</span></div>
+        <div class="vital"><span class="k">Reserved</span><span class="v" id="statReserved">—</span></div>
+        <div class="vital"><span class="k">Drops</span><span class="v" id="statDrops">—</span></div>
+        <div class="vital"><span class="k">Volume</span><span class="v" id="statVolume">—</span></div>
+      </div>
 
-    const dismissBoot = () => {
-      document.documentElement.classList.add('is-ready');
-      const b = document.getElementById('pf-boot');
-      if (!b) return;
-      b.classList.add('is-done');
-      setTimeout(() => b.remove(), 1300);
+      <div class="board-wrap">
+        <div class="board" id="board">
+          <div class="pegs" id="pegs"></div>
+          <div class="bins" id="bins"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label class="bet">
+          <span>Bet <b id="betValue">0.05 SOL</b></span>
+          <input type="range" id="betRange" min="0.01" max="2" step="0.01" value="0.05" />
+          <span class="hint">min <span id="betMin">0.01</span> · max <span id="betMax">2</span></span>
+        </label>
+        <div class="actions">
+          <button type="button" class="btn btn--primary" id="btnDrop">Drop ball</button>
+          <button type="button" class="btn btn--ghost" id="btnRefresh">Refresh</button>
+        </div>
+      </div>
+      <p class="status" id="statusLine">—</p>
+    </section>
+
+    <aside class="rail">
+      <h2>Live drops</h2>
+      <div class="feed" id="feed"><p class="empty">No drops yet — be first.</p></div>
+      <p class="note">
+        Shared house pot. Max win reserved before each drop. If pot cannot cover a bin, bet is refunded.
+        Mults match classic 9-bin board (×25 edges).
+      </p>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // Filled after deploy — override with window.PLINKO_CONFIG
+    window.PLINKO_CONFIG = window.PLINKO_CONFIG || {
+      contractAddress: '0xsbRGSkcCf9GwxGLv',
+      apiUrl: 'https://proofnetwork.lol/api',
+      apiKey: 'pk_b48a3dcd3dff1e2a936ab5832b6f190a8bace8ec93d17c944b44db63c3a46c91',
+      mock: false,
     };
-
-    const minBoot = new Promise((r) => setTimeout(r, 900));
-    Promise.all([boot(manifest), minBoot])
-      .then(dismissBoot)
-      .catch((err) => {
-        console.error('[ProofFront] boot failed:', err);
-        const app = document.querySelector('#app');
-        if (app) app.innerHTML = '<div class="pf-error" data-role="boot-error">Boot failed — see console.</div>';
-        dismissBoot();
-      });
   </script>
+  <script src="./vendor/wallet.js"></script>
+  <script>
+    if (typeof CryptoClient !== 'undefined') window.CryptoClient = CryptoClient;
+  </script>
+  <script src="./app.js"></script>
 </body>
 </html>

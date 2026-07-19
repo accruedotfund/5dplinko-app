@@ -1,25 +1,26 @@
 # 5dplinko.app
 
-Multiplayer physics Plinko — ProofFront renderer + ProofNetwork contract.
+Multiplayer **pot Plinko** on ProofNetwork.
 
 | | |
 |--|--|
-| **Site** | https://5dplinko.app |
-| **Contract** | `0x2CwT8CXi1W1EJ4Kv` |
-| **Physics** | Server-authoritative Rapier on ProofNetwork |
-| **Client** | Pure GL renderer + netsync |
+| **Contract** | `` |
+| **Play** | Bet SOL → VRF bin → payout from shared pot |
+| **Reserve** | Max-win liability tracked; refund if pot too thin |
+| **Mults** | `[25, 8, 3, 1, 0.5, 1, 3, 8, 25]` |
 
 ## Local
 
 ```bash
-npx serve .
-# open http://localhost:3000
+npm start
+# http://localhost:3000
 ```
 
 ## Deploy
 
 ```bash
 npx vercel deploy --prod --yes
+# attach domain 5dplinko.app
 ```
 
-Drop / reset use unsigned writes against the shared contract (same FreeSol physics board).
+Contract source: `contract/plinko5d.js` in deploy history / ProofNetwork id 1266+.

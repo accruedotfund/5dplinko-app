@@ -162,7 +162,7 @@ function hud(spec, ctx) {
     ctx.contract.write(fn, {}, { signed: false }).catch(() => {});
   };
 
-  const title = h('span', { style: { fontWeight: '800', color: '#fbbf24', letterSpacing: '0.5px' } }, '5D PLINKO');
+  const title = h('span', { style: { fontWeight: '800', color: '#fbbf24', letterSpacing: '0.5px' } }, 'UNLOCKER · PLINKO');
   const score = h('span', { 'data-role': 'score', style: { color: '#e8edf5' } }, 'score 0');
   const drops = h('span', { 'data-role': 'drops', style: { color: '#8a93a6' } }, '0 drops');
   const stats = h('div', { 'data-component': 'plinko-stats', style: {
@@ -216,7 +216,7 @@ function hud(spec, ctx) {
 export const manifest = {
   config: {
     // Same FreeSol / ProofNetwork physics contract — server Rapier, FE is renderer.
-    appName: '5dplinko',
+    appName: 'unlocker.bet · Plinko',
     contractAddress: ADDR, // 0x2CwT8CXi1W1EJ4Kv
     apiUrl: 'https://proofnetwork.lol',
     // same bearer FreeSol ships in their FE (public on workers.dev already)
@@ -228,7 +228,7 @@ export const manifest = {
     themes: { default: 'midnight' },
     sound: { enabled: false },
     loader: {
-      preset: 'classic', brand: '5dplinko', accent: '#fbbf24',
+      preset: 'classic', brand: 'unlocker · plinko', accent: '#fbbf24',
       background: 'radial-gradient(120% 90% at 50% 35%, #0d1119, #05070b)',
       textColor: '#e8edf5', muted: '#5b6472',
       stages: ['Loading board…', 'Warming Rapier…', 'Ready'], duration: 1.1,
