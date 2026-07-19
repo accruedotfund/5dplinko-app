@@ -1,8 +1,19 @@
 {
-  "address": "0xsbRGSkcCf9GwxGLv",
-  "id": 1266,
+  "address": "0xc5x0t5NwU_LtaNfr",
+  "id": 1267,
   "name": "5dplinko",
   "owner": "6pZFW2ihLUbsUBzKf6odwQXYZMQxbb56pCm3v9hQBxiY",
-  "treasury": "Givpz5oUhypZLZMJH9FFAYguy8ADoPWYvvi3Wxh8AK4E",
-  "deployedAt": "2026-07-19T05:50:30.521Z"
+  "treasury": "7arMv6ba8hbt8Ehe8oybQvbMJAjc93BsJoW1fp9vBqKs",
+  "deployedAt": "2026-07-19T05:53:53.353Z",
+  "mults": [
+    5,
+    3,
+    2,
+    1.2,
+    0.6,
+    1.2,
+    2,
+    3,
+    5
+  ]
 }

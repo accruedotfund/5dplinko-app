@@ -11,7 +11,8 @@
 const VRF_PRECISION = 1_000_000_000;
 // Binomial weights for 8-row plinko → 9 bins (C(8,k))
 const BIN_WEIGHTS = [1, 8, 28, 56, 70, 56, 28, 8, 1]; // sum 256
-const DEFAULT_MULTS = [25, 8, 3, 1, 0.5, 1, 3, 8, 25];
+// Thin-pot friendly mults (max 5×). Old FreeSol ×25 needs fat bankroll (0.05→1.25).
+const DEFAULT_MULTS = [5, 3, 2, 1.2, 0.6, 1.2, 2, 3, 5];
 
 const state = {
   metadata: {
@@ -200,15 +201,12 @@ async function drop(inputs) {
   }
 
   const maxMult = maxMultiplier();
-  const maxLiability = round6(bet * maxMult);
+  // Reserve only what pot can actually pay after this bet lands (no 1.25 SOL cold-start wall)
   const free = freePotSol();
-  if (state.config.enforceReserve && free + bet + 1e-12 < maxLiability) {
-    // after this bet accrues, still need cover for worst bin
-    // free is before bet; post-bet cash ≈ free + bet - reserved
-    // require free + bet >= maxLiability
-    throw new Error(
-      `pot cannot reserve max win (need ~${maxLiability} SOL free+bet, free ${free})`
-    );
+  const maxPayable = round6(free + bet);
+  const maxLiability = round6(Math.min(bet * maxMult, maxPayable));
+  if (state.config.enforceReserve && maxLiability + 1e-12 < bet * 0.5) {
+    throw new Error(`pot too thin to open a drop (free ${free} SOL)`);
   }
 
   const paySig = inputs.txSignature || null;
@@ -271,10 +269,11 @@ async function drop(inputs) {
   const roll = await vrfApi.selectNumber(1, VRF_PRECISION);
   const slot = pickBin(roll.result);
   const mult = Number(state.config.mults[slot]) || 0;
-  let payout = round6(bet * mult);
+  let idealPayout = round6(bet * mult);
+  let payout = idealPayout;
   let outcome = "win";
   let paySignature = null;
-  let refunded = false;
+  let potCapped = false;
 
   // release reserve first
   state.pot.reservedSol = round6(
@@ -282,28 +281,26 @@ async function drop(inputs) {
   );
   delete state.game.openBets[String(dropId)];
 
+  // Pay what the pot can actually cover — no "need 1.25 SOL" gate
   const cash = cashPotSol();
   if (payout > cash + 1e-9) {
-    // cannot pay advertised mult — full refund of bet
-    payout = bet;
-    outcome = "refund";
-    refunded = true;
-    state.stats.refunds += 1;
-    state.pot.refundedSol = round6(state.pot.refundedSol + bet);
-  } else if (payout > 0) {
-    if (payout >= bet) state.stats.wins += 1;
+    payout = cash;
+    potCapped = true;
+  }
+  if (payout > 0) {
+    if (payout + 1e-9 >= bet) state.stats.wins += 1;
     else state.stats.losses += 1;
-    if (payout > 0) {
-      paySignature = await payFromTreasury(from, payout);
-      state.pot.paidWinsSol = round6(state.pot.paidWinsSol + payout);
-    }
+    paySignature = await payFromTreasury(from, payout);
+    state.pot.paidWinsSol = round6(state.pot.paidWinsSol + payout);
   } else {
     state.stats.losses += 1;
   }
+  if (potCapped) state.stats.refunds += 1; // reuse counter as "capped pays"
 
   state.pot.drops += 1;
   trackPlayer(from, bet, payout);
 
+  const finalOutcome = potCapped ? "capped" : outcome;
   const result = {
     success: true,
     dropId,
@@ -313,8 +310,9 @@ async function drop(inputs) {
     mult,
     payoutSol: payout,
     profitSol: round6(payout - bet),
-    outcome,
-    refunded,
+    outcome: finalOutcome,
+    potCapped,
+    idealPayoutSol: idealPayout,
     edgeSol: edge,
     paySignature,
     vrfProof: roll.proof,
@@ -323,7 +321,6 @@ async function drop(inputs) {
     pot: publicPot(),
     pathSeed: roll.result, // FE uses for animation
   };
-
   pushRecent({
     dropId,
     from,
@@ -331,7 +328,7 @@ async function drop(inputs) {
     slot,
     mult,
     payoutSol: payout,
-    outcome,
+    outcome: finalOutcome,
     at: Date.now(),
   });
 
@@ -341,13 +338,12 @@ async function drop(inputs) {
       slot,
       mult,
       payoutSol: payout,
-      outcome,
+      outcome: finalOutcome,
       from,
       betSol: bet,
     };
   }
 
-  // multiplayer broadcast if available
   try {
     if (typeof rt !== "undefined" && rt.broadcast) {
       rt.broadcast("drops", {
@@ -357,7 +353,7 @@ async function drop(inputs) {
         slot,
         mult,
         payoutSol: payout,
-        outcome,
+        outcome: finalOutcome,
       });
       rt.broadcast("pot", publicPot());
     }

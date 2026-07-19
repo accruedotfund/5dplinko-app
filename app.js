@@ -16,7 +16,7 @@
     window.PLINKO_CONFIG || {}
   );
 
-  const MULTS = [25, 8, 3, 1, 0.5, 1, 3, 8, 25];
+  const MULTS = [5, 3, 2, 1.2, 0.6, 1.2, 2, 3, 5];
   const ROWS = 10;
 
   let client = null;
@@ -304,10 +304,9 @@
       await animateDrop(seed, slot);
 
       const toast = $('toast');
-      toast.textContent =
-        res.outcome === 'refund'
-          ? `Refund ${fmt(res.payoutSol)} SOL (pot thin)`
-          : `×${res.mult} → ${fmt(res.payoutSol)} SOL`;
+      toast.textContent = res.potCapped
+        ? `×${res.mult} pot-capped → ${fmt(res.payoutSol)} SOL`
+        : `×${res.mult} → ${fmt(res.payoutSol)} SOL`;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2800);
 
