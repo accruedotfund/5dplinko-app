@@ -281,77 +281,99 @@ async function drop(inputs) {
   if (payout > 0) {
     if (payout + 1e-9 >= bet) state.stats.wins += 1;
     else state.stats.losses += 1;
-    paySignature = await payFromTreasury(from, payout);
-    state.pot.paidWinsSol = round6(state.pot.paidWinsSol + payout);
+    try {
+      paySignature = await payFromTreasury(from, payout);
+    } catch (e) {
+      // Treasury send failed (shape / funds) — keep accounting honest, surface message
+      paySignature = null;
+      potCapped = true;
+      payout = 0;
+      state.stats.refunds += 1;
+    }
+    if (payout > 0) {
+      state.pot.paidWinsSol = round6(state.pot.paidWinsSol + payout);
+    }
   } else {
     state.stats.losses += 1;
   }
-  if (potCapped) state.stats.refunds += 1;
+  if (potCapped && payout > 0) state.stats.refunds += 1;
 
   state.pot.drops += 1;
   trackPlayer(from, bet, payout);
 
-  const finalOutcome = potCapped ? "capped" : "win";
+  const finalOutcome = potCapped ? "capped" : payout + 1e-9 >= bet ? "win" : "loss";
+
+  // PLAIN JSON only — nested proof objects / umi Signature classes trigger
+  // TypeBox "union of type|type, received [object Object]" on the wire.
+  const potSnap = publicPot();
   const result = {
     success: true,
-    dropId,
-    from,
-    betSol: bet,
-    dims, // length-5 unit vector — FE renders 5D path
-    slot,
-    mult,
-    payoutSol: payout,
-    idealPayoutSol: idealPayout,
-    profitSol: round6(payout - bet),
-    outcome: finalOutcome,
-    potCapped,
-    edgeSol: edge,
-    paySignature,
-    vrfProof: roll.proof,
-    rng: roll.result,
-    pathSeed: roll.result,
-    txSignature: confirmedSig,
-    pot: publicPot(),
+    dropId: Number(dropId),
+    from: String(from),
+    betSol: Number(bet),
+    d0: Number(dims[0]),
+    d1: Number(dims[1]),
+    d2: Number(dims[2]),
+    d3: Number(dims[3]),
+    d4: Number(dims[4]),
+    // keep dims as number[] (JSON-safe); FE uses this
+    dims: dims.map(Number),
+    slot: Number(slot),
+    mult: Number(mult),
+    payoutSol: Number(payout),
+    idealPayoutSol: Number(idealPayout),
+    profitSol: Number(round6(payout - bet)),
+    outcome: String(finalOutcome),
+    potCapped: !!potCapped,
+    edgeSol: Number(edge),
+    paySignature: plainSig(paySignature),
+    rng: Number(roll.result),
+    pathSeed: Number(roll.result),
+    txSignature: confirmedSig ? String(confirmedSig) : null,
+    // flat pot fields (no nested pot object)
+    potCashSol: Number(potSnap.cashSol),
+    potFreeSol: Number(potSnap.freeSol),
+    potDrops: Number(potSnap.drops),
   };
 
   pushRecent({
-    dropId,
-    from,
-    betSol: bet,
-    slot,
-    mult,
-    dims,
-    payoutSol: payout,
-    outcome: finalOutcome,
+    dropId: result.dropId,
+    from: result.from,
+    betSol: result.betSol,
+    slot: result.slot,
+    mult: result.mult,
+    dims: result.dims.slice(),
+    payoutSol: result.payoutSol,
+    outcome: result.outcome,
     at: Date.now(),
   });
 
   if (confirmedSig) {
     state.processed.betTx[confirmedSig] = {
-      dropId,
-      slot,
-      mult,
-      dims,
-      payoutSol: payout,
-      outcome: finalOutcome,
-      from,
-      betSol: bet,
+      dropId: result.dropId,
+      slot: result.slot,
+      mult: result.mult,
+      dims: result.dims.slice(),
+      payoutSol: result.payoutSol,
+      outcome: result.outcome,
+      from: result.from,
+      betSol: result.betSol,
     };
   }
 
   try {
     if (typeof rt !== "undefined" && rt.broadcast) {
       rt.broadcast("drops", {
-        dropId,
-        from,
-        betSol: bet,
-        slot,
-        mult,
-        dims,
-        payoutSol: payout,
-        outcome: finalOutcome,
+        dropId: result.dropId,
+        from: result.from,
+        betSol: result.betSol,
+        slot: result.slot,
+        mult: result.mult,
+        dims: result.dims,
+        payoutSol: result.payoutSol,
+        outcome: result.outcome,
       });
-      rt.broadcast("pot", publicPot());
+      rt.broadcast("pot", potSnap);
     }
   } catch (e) {
     /* optional */
@@ -490,13 +512,16 @@ function freePotSol() {
  */
 async function payFromTreasury(destination, amount) {
   if (!(amount > 0)) return null;
+  const dest = walletStr(destination);
+  if (!dest) throw new Error("pay: bad destination");
   const kp = blackbox.getKey(0);
-  const u = umi.setKeypairIdentity(umi.createUmi(), kp.secretKey || kp.privateKey);
+  const secret = kp.secretKey || kp.privateKey;
+  const u = umi.setKeypairIdentity(umi.createUmi(), secret);
   const builder = umi.transactionBuilder().add(
     umi.transferSol(u, {
       source: u.identity,
-      destination: umi.publicKey(destination),
-      amount: umi.sol(amount),
+      destination: umi.publicKey(dest),
+      amount: umi.sol(Number(amount)),
     })
   );
   const res = await umi.safeSend(u, builder, u.identity, {
@@ -504,7 +529,7 @@ async function payFromTreasury(destination, amount) {
     skipPreflight: false,
     maxAttempts: 2,
   });
-  return res.signature;
+  return plainSig(res && res.signature);
 }
 
 /**
@@ -627,4 +652,26 @@ function txPayload(tx) {
     if (typeof tx.transaction === "string") return tx.transaction;
   }
   return tx;
+}
+
+/**
+ * Force umi / web3 signatures into a plain base58 string (or null).
+ * Signature class / Uint8Array / {signature} → string.
+ * @internal
+ * @param {*} s
+ * @returns {string|null}
+ */
+function plainSig(s) {
+  if (s == null || s === "") return null;
+  if (typeof s === "string") return s;
+  if (typeof s === "object") {
+    if (typeof s.signature === "string") return s.signature;
+    if (typeof s.txSignature === "string") return s.txSignature;
+    // Uint8Array / number[] — leave null rather than return object
+    if (typeof s.toString === "function") {
+      const t = s.toString();
+      if (t && t !== "[object Object]") return t;
+    }
+  }
+  return null;
 }

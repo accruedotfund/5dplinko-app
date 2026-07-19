@@ -402,17 +402,28 @@
           });
         }
       }
-      if (res?.success === false) throw new Error(res.message || res.error || 'drop failed');
+      if (res?.success === false && !res?.already) {
+        throw new Error(res.message || res.error || 'drop failed');
+      }
+      if (!res || (res.success !== true && res.slot == null && !res.already)) {
+        throw new Error(res?.message || res?.error || 'empty drop result');
+      }
 
-      const dims = res.dims || expand5D(res.pathSeed || res.rng || Date.now());
+      // dims may be array or flat d0..d4 from plain-JSON settle return
+      let dims = res.dims;
+      if (!Array.isArray(dims) || dims.length < N_DIMS) {
+        if (res.d0 != null) dims = [res.d0, res.d1, res.d2, res.d3, res.d4];
+        else dims = expand5D(res.pathSeed || res.rng || Date.now());
+      }
       const slot = res.slot ?? slotFrom5D(dims);
       paintDims(dims);
       await animate5D(dims, slot);
 
       const toast = $('toast');
+      const tag = res.already ? ' (replay)' : '';
       toast.textContent = res.potCapped
-        ? `5D ×${res.mult} pot-capped → ${fmt(res.payoutSol)} SOL`
-        : `5D ×${res.mult} → ${fmt(res.payoutSol)} SOL`;
+        ? `5D ×${res.mult} pot-capped → ${fmt(res.payoutSol)} SOL${tag}`
+        : `5D ×${res.mult} → ${fmt(res.payoutSol)} SOL${tag}`;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2800);
       await refresh();
