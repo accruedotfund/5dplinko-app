@@ -15,7 +15,28 @@
       <h1>5d<span>plinko</span>.app</h1>
       <p class="tag">5 dimensions · multiplayer pot · VRF path · shared reserve</p>
     </div>
-    <div id="wallet-button"></div>
+    <div class="top-actions">
+      <a
+        class="coin-link"
+        id="coinLink"
+        href="https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="5DPLINKOAP on Tribe.run"
+      >
+        <span class="coin-dot" aria-hidden="true"></span>
+        <span class="coin-sym">$5DPLINKOAP</span>
+        <span class="coin-sub">Tribe</span>
+      </a>
+      <a
+        class="coin-link coin-link--ghost"
+        href="https://jup.ag/swap/SOL-3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Swap on Jupiter"
+      >Buy</a>
+      <div id="wallet-button"></div>
+    </div>
   </header>
 
   <main class="layout">
@@ -56,8 +77,36 @@
         Five VRF dimensions → 9 payout bins. Shared house pot. Max mult ×5 (thin pot OK — wins capped to cash on hand).
         Pay in SOL, settle on-chain via ProofNetwork.
       </p>
+      <div class="coin-card">
+        <div class="coin-card__head">
+          <span class="coin-card__sym">$5DPLINKOAP</span>
+          <a class="coin-card__tribe" href="https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP" target="_blank" rel="noopener noreferrer">Tribe.run</a>
+        </div>
+        <p class="coin-card__mint" id="coinMint" title="Click to copy">3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP</p>
+        <div class="coin-card__links">
+          <a href="https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP" target="_blank" rel="noopener noreferrer">Sponsors</a>
+          <a href="https://jup.ag/swap/SOL-3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP" target="_blank" rel="noopener noreferrer">Jupiter</a>
+          <a href="https://solscan.io/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP" target="_blank" rel="noopener noreferrer">Solscan</a>
+          <a href="https://github.com/accruedotfund/5dplinko-app" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
     </aside>
   </main>
+
+  <footer class="foot">
+    <a href="https://github.com/accruedotfund/5dplinko-app" target="_blank" rel="noopener noreferrer">github.com/accruedotfund/5dplinko-app</a>
+    <span class="sep">·</span>
+    <a href="https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP" target="_blank" rel="noopener noreferrer">
+      <img
+        class="tribe-badge"
+        src="https://api.tribe.run/tokens/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP/sponsors.svg"
+        alt="Tribe.run sponsors badge"
+        width="220"
+        height="89"
+        loading="lazy"
+      />
+    </a>
+  </footer>
 
   <div class="toast" id="toast" role="status"></div>
 
@@ -67,6 +116,9 @@
       apiUrl: 'https://proofnetwork.lol/api',
       apiKey: 'pk_b48a3dcd3dff1e2a936ab5832b6f190a8bace8ec93d17c944b44db63c3a46c91',
       mock: false,
+      coinMint: '3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP',
+      coinSymbol: '5DPLINKOAP',
+      tribeUrl: 'https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP',
     };
   </script>
   <script src="./vendor/wallet.js"></script>

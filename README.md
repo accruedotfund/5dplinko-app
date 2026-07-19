@@ -1,13 +1,24 @@
 # 5dplinko.app
 
-Multiplayer **pot Plinko** on ProofNetwork.
+Five-dimensional multiplayer **pot Plinko** on [ProofNetwork](https://proofnetwork.lol).
 
 | | |
 |--|--|
-| **Contract** | `` |
-| **Play** | Bet SOL → VRF bin → payout from shared pot |
-| **Reserve** | Max-win liability tracked; refund if pot too thin |
-| **Mults** | `[25, 8, 3, 1, 0.5, 1, 3, 8, 25]` |
+| **Play** | [5dplinko.app](https://5dplinko.app) |
+| **Contract** | `0xMzZmYvY7PAOH5Std` |
+| **Coin** | [`$5DPLINKOAP`](https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP) |
+| **Mint** | `3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP` |
+| **GitHub** | [accruedotfund/5dplinko-app](https://github.com/accruedotfund/5dplinko-app) |
+
+Bet SOL → 5D VRF path → 9 bins → payout from shared pot (capped to cash; max mult ×5).
+
+**Mults:** `[5, 3, 2, 1.2, 0.6, 1.2, 2, 3, 5]`
+
+## Coin links
+
+- **Tribe.run** — [token + sponsors](https://tribe.run/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP)
+- **Jupiter** — [swap SOL → $5DPLINKOAP](https://jup.ag/swap/SOL-3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP)
+- **Solscan** — [mint](https://solscan.io/token/3H4HYRCTiwoh9MUCBSYGAwBGzBCd8oxq6n5F7f3KxTRP)
 
 ## Local
 
@@ -20,10 +31,10 @@ npm start
 
 ```bash
 npx vercel deploy --prod --yes
-# attach domain 5dplinko.app
+# domain: 5dplinko.app
 ```
 
-Contract source: `contract/plinko5d.js` in deploy history / ProofNetwork id 1266+.
+Contract source: `contract/plinko5d.js`
 
 <!-- hypertribe:sponsors:start -->
 ## Sponsors

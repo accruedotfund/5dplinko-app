@@ -440,8 +440,26 @@
     }
   }
 
+  function wireCoinCopy() {
+    const el = $('coinMint');
+    if (!el) return;
+    const mint = CFG.coinMint || el.textContent.trim();
+    el.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(mint);
+        const toast = $('toast');
+        toast.textContent = 'Mint copied';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1600);
+      } catch {
+        /* ignore */
+      }
+    };
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     buildBoard();
+    wireCoinCopy();
     $('betRange').oninput = (e) => setBet(e.target.value);
     setBet(0.05);
     $('btnDrop').onclick = onDrop;
