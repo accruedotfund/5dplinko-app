@@ -1,0 +1,69 @@
+/* tokens.css — design tokens. Single source of truth for theme values.
+   Direction: Y2K / retro pixel-portal — warm goldenrod ground, cream parchment
+   panels with beveled (outset) borders, orange + red accents, grass green.
+   Keep corners sharp and borders chunky to read as "old web / pixel UI". */
+:root {
+  /* brand accents */
+  --pf-primary: #e8730c;        /* orange — buttons, primary accents */
+  --pf-primary-2: #f6a821;      /* lighter orange (gradient top) */
+  --pf-accent: #d63031;         /* red — highlights, active tab */
+  --pf-grass: #5fa83d;          /* green from the isometric scene */
+  --pf-primary-ink: #3a1e02;    /* dark text on orange */
+
+  /* surfaces — warm parchment over goldenrod ground */
+  --pf-bg: #f4c430;             /* goldenrod page background */
+  --pf-bg-2: #f0a830;           /* deeper gold (gradient/edges) */
+  --pf-surface: #fffdf2;        /* panel face — cream parchment */
+  --pf-surface-2: #f6e8c3;      /* inset/alt surface — tan */
+  --pf-surface-3: #fcefc7;      /* soft highlight fill */
+
+  /* beveled borders (classic outset: light TL, dark BR) */
+  --pf-bevel-light: #ffffff;
+  --pf-bevel-dark: #a9791c;
+  --pf-border: #c79a3a;         /* flat hairline where no bevel */
+
+  /* text */
+  --pf-text: #3b2a14;           /* dark brown ink */
+  --pf-muted: #8a7448;          /* faded brown */
+
+  /* status */
+  --pf-ok: #2f8f2f;
+  --pf-error: #c0392b;
+  --pf-pending: #c77f12;
+
+  /* modal backdrop (themed) */
+  --pf-overlay: rgba(40, 26, 6, 0.55);
+
+  /* pixel-art frame: chamfered ("notched") corners + hard drop-shadow that
+     follows the notched silhouette (via filter: drop-shadow, not box-shadow). */
+  --pf-notch: polygon(
+    5px 0, calc(100% - 5px) 0,
+    100% 5px, 100% calc(100% - 5px),
+    calc(100% - 5px) 100%, 5px 100%,
+    0 calc(100% - 5px), 0 5px
+  );
+  --pf-shadow-color: rgba(120, 80, 10, 0.5); /* themed; matches --pf-shadow tone */
+  --pf-drop: drop-shadow(3px 3px 0 var(--pf-shadow-color));
+
+  /* shape — sharp + chunky reads as pixel UI */
+  --pf-radius: 0px;
+  --pf-radius-sm: 0px;
+  --pf-bevel: 2px;              /* bevel border width */
+  --pf-gap: 12px;
+  --pf-shadow: 3px 3px 0 rgba(120, 80, 10, 0.35); /* hard drop shadow, no blur */
+
+  /* motion — easing curves + durations (used across transitions/animations) */
+  --pf-ease-out: cubic-bezier(0.22, 1, 0.36, 1);     /* smooth deceleration */
+  --pf-ease-spring: cubic-bezier(0.34, 1.5, 0.5, 1); /* overshoot / squash-settle */
+  --pf-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --pf-step: steps(3, end);                          /* chunky, pixel-flavored */
+  --pf-dur-fast: 0.13s;
+  --pf-dur: 0.26s;
+  --pf-dur-slow: 0.5s;
+
+  /* type — self-hosted PICO-8 pixel font (see styles/fonts.css), with a
+     portal-era system fallback while/if the font isn't available. Keep sizes at
+     multiples of 8px so logical pixels land on integer device pixels = crisp. */
+  --pf-font: "LazyFox", "BoldPixels", Tahoma, Verdana, "MS Sans Serif", sans-serif;
+  --pf-mono: "BoldPixels", "Courier New", monospace;
+}

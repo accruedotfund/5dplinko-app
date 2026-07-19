@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5dplinko.app</title><!--5dplinko</title>
+  <meta name="description" content="5dplinko.app — multiplayer physics Plinko on ProofNetwork." />
+  <!-- apply the saved theme BEFORE paint to avoid a flash of the default -->
+  <script>try{var t=localStorage.getItem('prooffront:theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/themes.css" />
+  <link rel="stylesheet" href="./styles/base.css" />
+  <link rel="stylesheet" href="./styles/components.css" />
+  <link rel="stylesheet" href="./styles/animations.css" />
+
+  <!-- The ONE dependency: proofwallet's CryptoClient (vendored, pinned for our ES modules). -->
+  <script src="./vendor/wallet.js"></script>
+  <script>window.CryptoClient = CryptoClient;</script>
+</head>
+<body data-app-root="plinko">
+  <!-- full-screen canvas: no topbar. proofwallet's connect button floats top-right;
+       build your scene (a scene/bg-video backdrop + hotspots/sprites/effects) into #app.
+       (Fixed full-screen components — scene, hotspots, timeline, … — portal themselves
+       to <body>, so #app just needs to exist.) -->
+  <style>html,body{margin:0;height:100%;background:#05070b;overflow:hidden;} #wallet-button{display:none!important;}</style>
+  <div id="wallet-button" data-region="wallet-button"></div>
+
+  <main id="app" data-region="app"></main>
+
+  <!-- animated boot screen (overlays until the app signals ready) -->
+  <div id="pf-boot" class="pf-boot-screen" data-region="boot">
+    <div class="pf-boot__inner" data-role="boot-inner">
+      <div class="pf-boot__brand" data-role="boot-brand">5dplinko</div>
+      <div class="pf-boot__bar" data-role="boot-bar"><span class="pf-boot__fill" data-role="boot-fill"></span></div>
+      <div class="pf-boot__status" data-role="boot-status">booting…</div>
+    </div>
+  </div>
+
+  <!-- Entry point: read the manifest (data) and run it -->
+  <script type="module" data-role="entry">
+    import { boot } from './src/boot.js';
+    import { manifest } from './src/plinko.manifest.js';
+
+    const dismissBoot = () => {
+      document.documentElement.classList.add('is-ready');
+      const b = document.getElementById('pf-boot');
+      if (!b) return;
+      b.classList.add('is-done');
+      setTimeout(() => b.remove(), 1300);
+    };
+
+    const minBoot = new Promise((r) => setTimeout(r, 900));
+    Promise.all([boot(manifest), minBoot])
+      .then(dismissBoot)
+      .catch((err) => {
+        console.error('[ProofFront] boot failed:', err);
+        const app = document.querySelector('#app');
+        if (app) app.innerHTML = '<div class="pf-error" data-role="boot-error">Boot failed — see console.</div>';
+        dismissBoot();
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+/* fonts.css — self-hosted pixel font. No CDN, no JS, no runtime dependency.
+
+   Active: BoldPixels (webfontkit-BoldPixels) — has true upper- AND lowercase
+   (222 glyphs), unlike PICO-8 which was small-caps only. woff2 ≈4KB.
+   The earlier PICO-8 face is kept below (commented) in case we want it back. */
+@font-face {
+  font-family: "BoldPixels";
+  src:
+    url("../assets/fonts/boldpixels.woff2") format("woff2"),
+    url("../assets/fonts/boldpixels.woff") format("woff"),
+    url("../assets/fonts/boldpixels.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Silver (Poppy Works pixel face) — SUBSET from the 3.57MB Silver.ttf source down to
+   Latin + Greek/Cyrillic + common UI symbols (665 glyphs) → 13KB woff2. The full font
+   has ~13,800 glyphs we don't use. Source TTF in fonts-src/ (not shipped). Re-subset:
+   pyftsubset fonts-src/Silver.ttf --flavor=woff2 --output-file=assets/fonts/silver.woff2 \
+     --unicodes="U+0020-00FF,U+2013-2014,U+2018-201D,U+2020-2022,U+2026,U+2190-21FF,U+2600-27BF,U+2B00-2BFF" */
+@font-face {
+  font-family: "Silver";
+  src: url("../assets/fonts/silver.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* LazyFox (Pixel Font 2) — the DEFAULT UI face. Source `fonts-src/LazyFox Pixel Font 2.ttf`
+   (20KB, 163 glyphs — already minimal) → 2KB woff2 (woff2-compressed, all glyphs kept).
+   Re-encode: pyftsubset "fonts-src/LazyFox Pixel Font 2.ttf" --flavor=woff2 \
+     --output-file=assets/fonts/lazyfox.woff2 --unicodes='*' --glyphs='*' */
+@font-face {
+  font-family: "LazyFox";
+  src: url("../assets/fonts/lazyfox.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* PICO-8 (generated from the bitmap atlas by build/build_font.py) — unused now.
+@font-face {
+  font-family: "PICO-8";
+  src:
+    url("../assets/fonts/pico-8.woff2") format("woff2"),
+    url("../assets/fonts/pico-8.woff") format("woff"),
+    url("../assets/fonts/pico-8.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+*/

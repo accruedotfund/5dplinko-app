@@ -1,0 +1,87 @@
+/* base.css — reset + layout shell, retro pixel-portal direction. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--pf-font);
+  font-size: 16px; /* 2x the 8px-tall glyph → crisp pixels */
+  color: var(--pf-text);
+  min-height: 100vh;
+  overflow-x: hidden; /* belt-and-suspenders: no horizontal page shift on mobile */
+  line-height: 1.2;
+  letter-spacing: 1px;
+  /* the pixel font has ONE weight — stop the browser faux-bolding/italicising
+     it, which would smear the crisp pixels. */
+  font-synthesis: none;
+  /* goldenrod ground with a faint pixel-grid texture */
+  background-color: var(--pf-bg);
+  background-image:
+    linear-gradient(180deg, var(--pf-bg) 0%, var(--pf-bg-2) 100%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0 1px, transparent 1px 16px);
+  background-attachment: fixed;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+}
+
+/* ── Top bar = a beveled portal title-bar (old-OS window caption vibe). ── */
+.pf-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pf-gap);
+  padding: 8px 12px;
+  margin: 16px auto 0;
+  max-width: 860px;
+  color: #fff;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 55%, var(--pf-primary) 55% 100%);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  /* thin grass-green base stripe nods to the isometric scene, + hard drop */
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.16), var(--pf-shadow);
+}
+
+.pf-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 2px 2px 0 var(--pf-accent), 4px 4px 0 rgba(0, 0, 0, 0.22);
+}
+
+/* pixel emblem before the wordmark (pure CSS, no extra DOM) */
+.pf-brand::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: var(--pf-grass);
+  border: 2px solid;
+  border-color: var(--pf-bevel-light) #2f5d20 #2f5d20 var(--pf-bevel-light);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pf-main {
+  max-width: 860px;
+  margin: 14px auto 56px;
+  padding: 0 20px;
+  display: grid;
+  gap: var(--pf-gap);
+}
+
+.pf-boot,
+.pf-muted {
+  color: var(--pf-muted);
+}

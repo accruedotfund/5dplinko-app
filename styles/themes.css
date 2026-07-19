@@ -1,0 +1,94 @@
+/* themes.css — alternate palettes as [data-theme] CSS-variable overrides.
+   The DEFAULT (retro orange) lives in tokens.css :root, so no block is needed
+   for it (data-theme="retro" simply falls back to :root). Each block below only
+   overrides COLOR tokens — structural tokens (radius, bevel width, font, gap)
+   stay in tokens.css and are shared by every theme.
+
+   Switch at runtime: src/core/theme.js sets <html data-theme="…">. */
+
+/* ── Midnight — dark blue ───────────────────────────────────────────────────── */
+[data-theme="midnight"] {
+  --pf-primary: #3b82f6;
+  --pf-primary-2: #60a5fa;
+  --pf-accent: #22d3ee;
+  --pf-grass: #34d399;
+  --pf-primary-ink: #061222;
+
+  --pf-bg: #0b1220;
+  --pf-bg-2: #060b14;
+  --pf-surface: #121b2e;
+  --pf-surface-2: #1b2740;
+  --pf-surface-3: #16213a;
+
+  --pf-bevel-light: #2c3c5c;
+  --pf-bevel-dark: #050a13;
+  --pf-border: #243149;
+
+  --pf-text: #dde7f5;
+  --pf-muted: #8094b3;
+
+  --pf-ok: #34d399;
+  --pf-error: #f87171;
+  --pf-pending: #fbbf24;
+  --pf-overlay: rgba(2, 6, 16, 0.62);
+  --pf-shadow: 3px 3px 0 rgba(0, 4, 12, 0.55);
+  --pf-shadow-color: rgba(0, 4, 12, 0.6);
+}
+
+/* ── Hacker — phosphor green on black ───────────────────────────────────────── */
+[data-theme="hacker"] {
+  --pf-primary: #00ff66;
+  --pf-primary-2: #4dff95;
+  --pf-accent: #00e5ff;
+  --pf-grass: #00ff66;
+  --pf-primary-ink: #00190a;
+
+  --pf-bg: #020a04;
+  --pf-bg-2: #000300;
+  --pf-surface: #04140a;
+  --pf-surface-2: #062b13;
+  --pf-surface-3: #05200d;
+
+  --pf-bevel-light: #0a5226;
+  --pf-bevel-dark: #001a08;
+  --pf-border: #0a3d1b;
+
+  --pf-text: #66ff88;
+  --pf-muted: #3a8f55;
+
+  --pf-ok: #00ff66;
+  --pf-error: #ff5555;
+  --pf-pending: #ffd000;
+  --pf-overlay: rgba(0, 8, 2, 0.72);
+  --pf-shadow: 3px 3px 0 rgba(0, 12, 5, 0.6);
+  --pf-shadow-color: rgba(0, 12, 5, 0.65);
+}
+
+/* ── Amber — vintage terminal ───────────────────────────────────────────────── */
+[data-theme="amber"] {
+  --pf-primary: #ffb000;
+  --pf-primary-2: #ffc94d;
+  --pf-accent: #ff7b00;
+  --pf-grass: #9acd32;
+  --pf-primary-ink: #1a0f00;
+
+  --pf-bg: #140d02;
+  --pf-bg-2: #0a0600;
+  --pf-surface: #1e1405;
+  --pf-surface-2: #2a1d08;
+  --pf-surface-3: #241806;
+
+  --pf-bevel-light: #5a3f12;
+  --pf-bevel-dark: #0a0600;
+  --pf-border: #3a2a0d;
+
+  --pf-text: #ffcf7a;
+  --pf-muted: #a8824a;
+
+  --pf-ok: #9acd32;
+  --pf-error: #ff5555;
+  --pf-pending: #ffd000;
+  --pf-overlay: rgba(10, 6, 0, 0.66);
+  --pf-shadow: 3px 3px 0 rgba(20, 10, 0, 0.5);
+  --pf-shadow-color: rgba(20, 10, 0, 0.55);
+}

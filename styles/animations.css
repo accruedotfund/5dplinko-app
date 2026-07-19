@@ -1,0 +1,489 @@
+/* animations.css — motion layer. Keyframes, entrance choreography, the boot
+   screen, and the reduced-motion guard. Loaded last so it can refine component
+   styles. Techniques (overshoot keyframes, per-element delay stagger, bar-sweep
+   reveals) adapted from yui540/css-animations to the beveled-pixel aesthetic. */
+
+/* ── Keyframes ──────────────────────────────────────────────────────────────── */
+
+/* squash-settle pop with a cheeky rotate wobble (for modals) */
+@keyframes pf-pop {
+  0%   { opacity: 0; transform: scale(0.86, 0.9) rotate(-2deg); }
+  50%  { opacity: 1; transform: scale(1.05, 1.06) rotate(1.2deg); }
+  72%  { transform: scale(0.98, 0.975) rotate(-0.4deg); }
+  100% { transform: scale(1, 1) rotate(0); }
+}
+
+/* fly-in with a rotational kick — feed/table rows tumble into place */
+@keyframes pf-fly-in {
+  0%   { opacity: 0; transform: translateX(-18px) rotate(-5deg); }
+  60%  { opacity: 1; transform: translateX(3px) rotate(1.5deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+
+/* directional slide for tab panes */
+@keyframes pf-slide-in-right {
+  0%   { opacity: 0; transform: translateX(26px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* a glossy shine sweeping across a title bar */
+@keyframes pf-shine {
+  to { transform: translateX(360%) skewX(-12deg); }
+}
+
+/* coin-flip for the LED indicator when it toggles */
+@keyframes pf-led-flip {
+  0%   { transform: rotateY(0) scale(1); }
+  45%  { transform: rotateY(90deg) scale(1.35); }
+  55%  { transform: rotateY(90deg) scale(1.35); }
+  100% { transform: rotateY(0) scale(1); }
+}
+
+/* a quick attention shake (e.g. a won fight, an error) */
+@keyframes pf-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px) rotate(-1deg); }
+  40% { transform: translateX(4px) rotate(1deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+/* rise + slight overshoot, used for staggered content entrance */
+@keyframes pf-rise {
+  0%   { opacity: 0; transform: translateY(10px); }
+  70%  { opacity: 1; transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+/* row slide-in with a touch of stretch (feed / table rows) */
+@keyframes pf-row-in {
+  0%   { opacity: 0; transform: translateX(-10px) scaleX(0.98); }
+  70%  { opacity: 1; transform: translateX(1px) scaleX(1.01); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+
+/* a bar sweeping left→right to reveal what's behind it */
+@keyframes pf-wipe {
+  0%   { transform: translateX(-101%); }
+  100% { transform: translateX(101%); }
+}
+
+/* boot loader fill */
+@keyframes pf-boot-fill {
+  0%   { transform: scaleX(0); }
+  70%  { transform: scaleX(0.85); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes pf-blink { 50% { opacity: 0.25; } }
+
+/* hero: twinkling starfield + a slow float for the monument */
+.pf-hero--stars::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.6;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 62% 14%, #fff, transparent),
+    radial-gradient(1px 1px at 82% 52%, #cfe, transparent),
+    radial-gradient(1px 1px at 34% 68%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 48% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 80%, #cdf, transparent),
+    radial-gradient(1px 1px at 22% 88%, #fff, transparent),
+    radial-gradient(1px 1px at 72% 76%, #fff, transparent);
+  animation: pf-twinkle 3.5s ease-in-out infinite alternate;
+}
+@keyframes pf-twinkle { from { opacity: 0.35; } to { opacity: 0.85; } }
+@keyframes pf-float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(1deg); } }
+
+/* ── Staggered content entrance ─────────────────────────────────────────────── */
+/* Top-level layout children rise in sequence. Gated on `.is-ready` (added by the
+   boot script when the boot screen dismisses) so the reveal plays AS the boot
+   overlay fades — not hidden behind it. Without .is-ready content is just visible
+   (safe fallback if JS never runs). */
+html.is-ready .pf-main > *:not(.pf-modal-overlay) {
+  animation: pf-rise var(--pf-dur, 0.26s) var(--pf-ease-out) both;
+  animation-delay: var(--pf-enter-delay, 0s);
+}
+.pf-main > *:nth-child(1) { --pf-enter-delay: 0.02s; }
+.pf-main > *:nth-child(2) { --pf-enter-delay: 0.08s; }
+.pf-main > *:nth-child(3) { --pf-enter-delay: 0.14s; }
+.pf-main > *:nth-child(4) { --pf-enter-delay: 0.20s; }
+.pf-main > *:nth-child(5) { --pf-enter-delay: 0.26s; }
+.pf-main > *:nth-child(6) { --pf-enter-delay: 0.32s; }
+.pf-main > *:nth-child(7) { --pf-enter-delay: 0.38s; }
+.pf-main > *:nth-child(n + 8) { --pf-enter-delay: 0.44s; }
+
+/* ── Playful overrides (loaded last → these win) ─────────────────────────────── */
+
+/* tab panes slide in from the right when shown */
+.pf-tabs__pane:not([hidden]) {
+  animation: pf-slide-in-right var(--pf-dur, 0.26s) var(--pf-ease-out) both;
+}
+
+/* feed + table rows tumble in with a rotational kick */
+.pf-feed__row { animation: pf-fly-in var(--pf-dur, 0.26s) var(--pf-ease-out) both; }
+.pf-tr { animation: pf-fly-in var(--pf-dur, 0.26s) var(--pf-ease-out) both; }
+
+/* a glossy shine sweeps across each card/panel title bar on reveal */
+.pf-card__title { position: relative; overflow: hidden; }
+.pf-card__title::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-160%) skewX(-12deg);
+  animation: pf-shine 0.9s var(--pf-ease-out) 0.25s both;
+  pointer-events: none;
+}
+
+/* the reactor LED does a coin-flip on each toggle */
+.pf-led--pulse { animation: pf-led-flip 0.42s var(--pf-ease-out); }
+
+/* one-shot attention shake (JS adds this class on an error) */
+.pf-shake-once { animation: pf-shake 0.4s var(--pf-ease-out); }
+
+/* ── yui-format primitives: counter · toast · curtain · burst ────────────────── */
+
+/* counter: the value pops when it lands */
+.pf-pop-once { animation: pf-pop var(--pf-dur, 0.26s) var(--pf-ease-out); }
+
+/* toast: pops in from the side, slides out */
+.pf-toast-host {
+  position: fixed; z-index: 200; display: grid; gap: 10px; padding: 16px; pointer-events: none;
+}
+.pf-toast-host--top-right { top: 0; right: 0; justify-items: end; }
+.pf-toast-host--top { top: 0; left: 50%; transform: translateX(-50%); }
+.pf-toast-host--bottom-right { bottom: 0; right: 0; justify-items: end; }
+.pf-toast-host--bottom { bottom: 0; left: 50%; transform: translateX(-50%); justify-items: center; }
+.pf-toast {
+  pointer-events: auto; cursor: pointer; min-width: 0; max-width: min(320px, calc(100vw - 32px));
+  padding: 10px 14px; font-weight: 700; font-size: 16px; color: var(--pf-text);
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  border-left: 5px solid var(--pf-primary);
+  box-shadow: var(--pf-shadow);
+  animation: pf-toast-in 0.34s var(--pf-ease-out) both;
+}
+.pf-toast--ok { border-left-color: var(--pf-ok); }
+.pf-toast--error { border-left-color: var(--pf-error); }
+.pf-toast--info { border-left-color: var(--pf-primary); }
+.pf-toast.is-out { animation: pf-toast-out 0.3s var(--pf-ease-in-out) forwards; }
+@keyframes pf-toast-in {
+  0% { opacity: 0; transform: translateX(26px) scale(0.9); }
+  60% { opacity: 1; transform: translateX(-3px) scale(1.02); }
+  100% { transform: translateX(0) scale(1); }
+}
+@keyframes pf-toast-out { to { opacity: 0; transform: translateX(26px) scale(0.95); } }
+
+/* curtain: two panels part open to reveal the content */
+.pf-curtain__stage {
+  position: relative; overflow: hidden;
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+}
+.pf-curtain__body { padding: 16px; display: grid; gap: var(--pf-gap); }
+.pf-curtain__panel {
+  position: absolute; top: 0; bottom: 0; width: 52%; z-index: 2;
+  background: linear-gradient(180deg, var(--pf-primary-2), var(--pf-primary));
+  border-bottom: 4px solid var(--pf-bevel-dark);
+  transition: transform 0.6s var(--pf-ease-in-out);
+}
+.pf-curtain__panel--l { left: 0; }
+.pf-curtain__panel--r { right: 0; }
+.pf-curtain.is-open .pf-curtain__panel--l { transform: translateX(-101%) rotate(-3deg); }
+.pf-curtain.is-open .pf-curtain__panel--r { transform: translateX(101%) rotate(3deg); }
+
+/* shockwave: expanding rings blast from centre — graded glow ring (bright
+   leading edge + soft inner falloff), a chromatic fringe behind it, and a hot
+   core flash at the origin. Ring thins as it expands (border in the scaled
+   space) so the wavefront reads as energy, not a rubber band. */
+.pf-shockwave { position: fixed; inset: 0; z-index: 290; pointer-events: none; }
+.pf-shockwave__ring {
+  position: absolute; width: 48px; height: 48px; translate: -50% -50%; /* center on its left/top point */
+  border-radius: 50%;
+  border: 4px solid var(--shock-c, var(--pf-accent));
+  box-shadow:
+    0 0 10px 2px var(--shock-c, var(--pf-accent)),          /* outer bloom */
+    inset 0 0 12px 3px var(--shock-c, var(--pf-accent));    /* inner energy */
+  filter: saturate(1.4);
+  animation: pf-wave 0.85s var(--pf-ease-out) forwards;
+}
+/* chromatic fringe: a slightly larger, hue-shifted ghost ring riding behind */
+.pf-shockwave__ring::after {
+  content: ''; position: absolute; inset: -7px; border-radius: 50%;
+  border: 2px solid var(--shock-c, var(--pf-accent));
+  filter: hue-rotate(40deg) blur(2px); opacity: 0.7;
+}
+/* hot core: a white-out pop at the origin that collapses as the rings leave */
+.pf-shockwave__core {
+  position: absolute; width: 56px; height: 56px; translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, var(--shock-c, var(--pf-accent)) 38%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: pf-wave-core 0.4s var(--pf-ease-out) forwards;
+}
+@keyframes pf-wave { 0% { transform: scale(0); opacity: 1; } 70% { opacity: 0.55; } 100% { transform: scale(16); opacity: 0; } }
+@keyframes pf-wave-core { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(2.6); opacity: 0; } }
+
+/* flash: one soft full-screen pulse (NOT a strobe) */
+.pf-flash {
+  position: fixed; inset: 0; z-index: 280; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--flash-c, var(--pf-accent)) 45%, transparent), transparent 72%);
+}
+.pf-flash.is-on { animation: pf-flash 0.5s ease-out; }
+@keyframes pf-flash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
+
+/* slam: huge arcade text crashes in then fades */
+.pf-slam { position: fixed; inset: 0; z-index: 295; pointer-events: none; display: grid; place-items: center; }
+.pf-slam__text {
+  font-size: clamp(56px, 14vw, 160px); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--pf-accent); -webkit-text-stroke: 2px #000; text-shadow: 6px 6px 0 rgba(0, 0, 0, 0.5);
+  animation: pf-slam 1.25s var(--pf-ease-out) forwards;
+}
+@keyframes pf-slam {
+  0%   { opacity: 0; transform: scale(3) rotate(-8deg); }
+  18%  { opacity: 1; transform: scale(0.86) rotate(2deg); }
+  28%  { transform: scale(1.06) rotate(-1deg); }
+  38%  { transform: scale(1) rotate(0); }
+  82%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+/* burst: radial confetti from a point (default = screen centre; an origin box is
+   placed per-fire at the trigger's position, and particles emanate from it) */
+.pf-burst { position: fixed; inset: 0; z-index: 300; pointer-events: none; }
+.pf-burst__origin { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.pf-burst__p {
+  position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; border-radius: 2px;
+  animation: pf-burst 0.9s var(--pf-ease-out) forwards;
+}
+@keyframes pf-burst {
+  0% { transform: rotate(var(--a)) translateY(0) scale(1); opacity: 1; }
+  100% { transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scale(0.3) rotate(var(--r)); opacity: 0; }
+}
+
+/* ── Boot screen ────────────────────────────────────────────────────────────── */
+.pf-boot-screen {
+  position: fixed;
+  inset: 0;
+  /* the boot loader is THE topmost layer — above even full-screen postprocess
+     (z 2147483600). Nothing should paint over the loading screen. */
+  z-index: 2147483647;
+  display: grid;
+  place-items: center;
+  background: var(--pf-bg);
+  background-image: linear-gradient(180deg, var(--pf-bg), var(--pf-bg-2));
+  transition: opacity var(--pf-dur-slow, 0.5s) var(--pf-ease-out),
+    visibility var(--pf-dur-slow, 0.5s);
+}
+.pf-boot-screen.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Boot loader presets (see src/core/loader.js) ───────────────────────────── */
+/* shared full-screen background for bar-bottom */
+.pf-boot__bg { position: absolute; inset: 0; overflow: hidden; }
+/* procedural canvas animation behind the loader content (config.loader.canvas) */
+.pf-boot__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pf-boot__bgmedia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pf-boot__bg--parallax .pf-boot__bglayer { animation: pf-boot-drift 9s var(--pf-ease-in-out, ease-in-out) infinite alternate; }
+.pf-boot__bg--parallax .pf-boot__bglayer:nth-child(1) { animation-duration: 11s; }
+.pf-boot__bg--parallax .pf-boot__bglayer:nth-child(2) { animation-duration: 8.5s; }
+.pf-boot__bg--parallax .pf-boot__bglayer:nth-child(3) { animation-duration: 6.5s; }
+@keyframes pf-boot-drift { from { scale: 1.08; translate: -2.5% 0; } to { scale: 1.13; translate: 2.5% 0; } }
+.pf-boot__scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }
+
+/* bar-bottom: stages text centered, progress bar pinned to the bottom edge */
+.pf-bootb__center { position: absolute; inset: 0; display: grid; place-content: center; gap: 12px; text-align: center; padding: 24px; }
+.pf-bootb__brand {
+  font-size: clamp(28px, 6vw, 56px); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff;
+  text-shadow: 3px 3px 0 var(--pf-accent), 6px 6px 0 rgba(0, 0, 0, 0.45);
+}
+.pf-bootb__stage { color: #fff; opacity: 0.9; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; }
+.pf-bootb__bar { position: absolute; left: 0; right: 0; bottom: 0; height: 16px; background: rgba(0, 0, 0, 0.5); }
+.pf-bootb__fill {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--pf-accent) 65%, #fff), var(--pf-accent));
+  box-shadow: 0 0 14px var(--pf-accent); transition: width 0.2s ease;
+}
+
+/* number: a big loading number in the accent color */
+.pf-bootn__center { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; text-align: center; }
+.pf-bootn__num { font-size: clamp(64px, 18vw, 168px); font-weight: 800; line-height: 1; color: var(--pf-accent); }
+.pf-bootn__stage { color: var(--pf-muted); letter-spacing: 3px; text-transform: uppercase; font-size: 13px; }
+
+.pf-boot__inner {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  width: min(320px, 70vw);
+}
+
+/* brand reveal: a sweeping bar uncovers the wordmark */
+.pf-boot__brand {
+  position: relative;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pf-text);
+  text-shadow: 2px 2px 0 var(--pf-accent);
+  overflow: hidden;
+  padding: 2px 4px;
+}
+.pf-boot__brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--pf-primary);
+  animation: pf-wipe 0.7s var(--pf-ease-in-out) 0.15s both;
+}
+
+/* loader bar with a beveled track and an easing fill */
+.pf-boot__bar {
+  width: 100%;
+  height: 14px;
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  overflow: hidden;
+}
+.pf-boot__fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transform-origin: left;
+  background: linear-gradient(180deg, var(--pf-primary-2), var(--pf-primary));
+  animation: pf-boot-fill 1.1s var(--pf-ease-out) 0.3s both;
+}
+/* a shimmer keeps sweeping across the loader while it fills */
+.pf-boot__fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-200%) skewX(-12deg);
+  animation: pf-shine 1.1s var(--pf-ease-in-out) 0.5s infinite;
+}
+.pf-boot__status {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pf-muted);
+  animation: pf-blink 1s steps(1) infinite;
+}
+
+/* ── tween component: gentle looping motions ────────────────────────────────────
+   Use the individual translate/rotate/scale properties (compose with any child
+   transform; per CLAUDE.md). Distance/angle/scale come from CSS vars set in JS. */
+.pf-tween { display: inline-block; will-change: transform; }
+@keyframes pf-tw-y {
+  0%   { translate: 0 calc(-1 * var(--tw-d, 8px)); }
+  50%  { translate: 0 var(--tw-d, 8px); }
+  100% { translate: 0 calc(-1 * var(--tw-d, 8px)); }
+}
+@keyframes pf-tw-x {
+  0%   { translate: calc(-1 * var(--tw-d, 8px)) 0; }
+  50%  { translate: var(--tw-d, 8px) 0; }
+  100% { translate: calc(-1 * var(--tw-d, 8px)) 0; }
+}
+@keyframes pf-tw-rot {
+  0%   { rotate: calc(-1 * var(--tw-a, 6deg)); }
+  50%  { rotate: var(--tw-a, 6deg); }
+  100% { rotate: calc(-1 * var(--tw-a, 6deg)); }
+}
+@keyframes pf-tw-scale {
+  0%, 100% { scale: 1; }
+  50%      { scale: var(--tw-s, 1.06); }
+}
+
+/* ── Flash authoring layer: shape spin + kinetic typography ──────────────────── */
+@keyframes pf-shape-spin { to { rotate: 360deg; } }
+@keyframes pf-kin-reveal { from { opacity: 0; transform: translateY(0.5em) scale(0.8); } to { opacity: 1; transform: none; } }
+@keyframes pf-kin-rise   { from { opacity: 0; transform: translateY(1em); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pf-kin-fade   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pf-kin-wave   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.32em); } }
+@keyframes pf-kin-glitch {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-2px, 1px); }
+  40%  { transform: translate(2px, -1px); }
+  60%  { transform: translate(-1px, -1px); }
+  80%  { transform: translate(1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ── Holo FX + loot keyframes (shine · sparkle · tilt · pack · gacha) ────────── */
+@keyframes pf-shine-sweep { 0% { transform: translateX(-160%); } 55%, 100% { transform: translateX(160%); } }
+@keyframes pf-sparkle-twinkle {
+  0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(40deg); }
+}
+@keyframes pf-tilt-spin-y { to { transform: rotateY(360deg); } }
+@keyframes pf-tilt-spin-x { to { transform: rotateX(360deg); } }
+@keyframes pf-pack-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-4px) rotate(-2deg); }
+  40% { transform: translateX(4px) rotate(2deg); }
+  60% { transform: translateX(-3px) rotate(-1.5deg); }
+  80% { transform: translateX(3px) rotate(1.5deg); }
+}
+@keyframes pf-pack-flash { /* scale property (centering held by the element's translate) */
+  0%   { opacity: 0; scale: 0.3; }
+  30%  { opacity: 0.95; }
+  100% { opacity: 0; scale: 1.7; }
+}
+@keyframes pf-pack-ring {
+  0%   { opacity: 0.9; scale: 0.2; }
+  100% { opacity: 0; scale: 3.6; }
+}
+@keyframes pf-pack-spark {
+  0%   { opacity: 1; translate: -50% -50%; scale: 1; }
+  100% { opacity: 0; translate: calc(-50% + var(--dx)) calc(-50% + var(--dy)); scale: 0.3; }
+}
+@keyframes pf-pack-quake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -2px); }
+}
+@keyframes pf-pack-hot { /* pixel brightness flicker for epic+ reveals (no soft glow) */
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.3); }
+}
+/* foil holo light-bar sweeps diagonally across a card face */
+@keyframes pf-pack-holo { from { translate: -200% 0; } to { translate: 380% 0; } }
+/* the centered emblem gently breathes (float + scale) while revealed */
+@keyframes pf-pack-emblem { 0%, 100% { translate: 0 0; scale: 1; } 50% { translate: 0 -3px; scale: 1.05; } }
+/* drifting diagonal sheen highlight over the sealed-pack back */
+@keyframes pf-pack-sheen { 0% { background-position: 220% 0; } 100% { background-position: -120% 0; } }
+/* the sealed pack bobs to invite a tap */
+@keyframes pf-pack-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+@keyframes pf-pack-hintpulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+@keyframes pf-gacha-charge {
+  0%   { transform: scale(0.4); opacity: 0.35; }
+  70%  { transform: scale(1.12); opacity: 1; }
+  85%  { transform: scale(1.28); }
+  100% { transform: scale(0.08); opacity: 0; }
+}
+@keyframes pf-gacha-pop { to { opacity: 1; transform: none; } }
+
+/* ── Reduced motion: INTENTIONALLY IGNORED ──────────────────────────────────────
+   Per CLAUDE.md "Motion policy", this project ignores prefers-reduced-motion
+   everywhere. WebKit/Safari reports macOS "Reduce Motion" eagerly and the
+   embedded preview WebView often reports it ON regardless of the OS toggle, which
+   silently froze our intentional motion (the "animations don't run" bug). So there
+   is deliberately NO `@media (prefers-reduced-motion: reduce)` block here. Do not
+   add one back. (Motion here is intentional — boot reveals, entrance, camera pans,
+   payoffs — and is not a vestibular-trigger concern for this product.) */

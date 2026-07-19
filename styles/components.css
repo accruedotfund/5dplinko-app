@@ -1,0 +1,2572 @@
+/* components.css — retro pixel-portal styling for the built-in components.
+   Selectors key off the data-component / data-role attributes the JS emits.
+   The era's signature is the BEVEL: panels/buttons are "outset" (light top-left,
+   dark bottom-right); pressed buttons invert to "inset". */
+
+/* ── Card: a beveled parchment panel ───────────────────────────────────────── */
+.pf-card {
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  border-radius: var(--pf-radius);
+  padding: 14px 16px;
+  box-shadow: var(--pf-shadow);
+}
+
+/* Title bar styled like an old window caption strip */
+.pf-card__title {
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin: -14px -16px 12px;
+  padding: 5px 12px;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  border-bottom: var(--pf-bevel) solid var(--pf-bevel-dark);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ── Buttons: outset bevel, press to inset ─────────────────────────────────── */
+.pf-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--pf-primary-ink);
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  border-radius: var(--pf-radius-sm);
+  padding: 7px 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  text-shadow: none; /* button labels stay crisp */
+  transition: transform var(--pf-dur-fast) var(--pf-ease-out),
+    filter var(--pf-dur-fast) var(--pf-ease-out);
+}
+.pf-btn:not(:disabled):hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.pf-btn:not(:disabled):active {
+  /* invert the bevel = "pressed in", with a little squash */
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  transform: translate(1px, 1px) scale(0.95);
+}
+.pf-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+.pf-btn--ghost {
+  background: linear-gradient(180deg, var(--pf-surface), var(--pf-surface-2));
+  color: var(--pf-text);
+}
+
+/* ── Forms (action component) ──────────────────────────────────────────────── */
+.pf-action {
+  display: grid;
+  gap: 10px;
+}
+.pf-field {
+  display: grid;
+  gap: 3px;
+}
+.pf-field__label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pf-muted);
+  text-transform: uppercase;
+}
+.pf-input {
+  font: inherit;
+  font-size: 16px;
+  background: var(--pf-surface);
+  color: var(--pf-text);
+  /* inset bevel = "sunken" field */
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  border-radius: var(--pf-radius-sm);
+  padding: 7px 9px;
+  width: 100%;
+  transition: border-color var(--pf-dur-fast) var(--pf-ease-out),
+    box-shadow var(--pf-dur-fast) var(--pf-ease-out);
+}
+.pf-input:focus {
+  outline: 1px dashed var(--pf-primary);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--pf-primary) 30%, transparent);
+}
+
+/* ── Status line ───────────────────────────────────────────────────────────── */
+.pf-status {
+  font-size: 16px;
+  font-weight: 700;
+}
+.pf-status--ok { color: var(--pf-ok); }
+.pf-status--error { color: var(--pf-error); }
+.pf-status--pending { color: var(--pf-pending); }
+
+/* ── View / lists / json ───────────────────────────────────────────────────── */
+.pf-view__body {
+  min-height: 1.4em;
+}
+.pf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.pf-list__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--pf-surface-2);
+  border: 1px solid var(--pf-border);
+}
+.pf-list__row:nth-child(odd) {
+  background: var(--pf-surface-3);
+}
+.pf-list__score {
+  color: var(--pf-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.pf-json {
+  font-family: var(--pf-mono);
+  font-size: 16px;
+  color: var(--pf-text);
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  padding: 10px;
+  overflow: auto;
+  margin: 0;
+}
+.pf-skeleton {
+  color: var(--pf-muted);
+  font-style: italic;
+}
+.pf-error {
+  color: var(--pf-error);
+  font-weight: 700;
+}
+
+/* ── Primitives: text · divider · badge ────────────────────────────────────── */
+.pf-text { margin: 0; }
+.pf-text--title { font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.pf-text--subtitle { font-size: 16px; font-weight: 700; color: var(--pf-muted); text-transform: uppercase; }
+.pf-text--muted { color: var(--pf-muted); }
+.pf-text--mono { font-family: var(--pf-mono); }
+
+.pf-divider {
+  border: 0;
+  height: 0;
+  border-top: var(--pf-bevel) solid var(--pf-bevel-dark);
+  border-bottom: var(--pf-bevel) solid var(--pf-bevel-light);
+  margin: 6px 0;
+}
+
+.pf-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--pf-primary-ink);
+  background: var(--pf-surface-2);
+  border: 2px solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  padding: 3px 8px;
+}
+.pf-badge--ok { background: var(--pf-grass); color: #06270a; }
+.pf-badge--warn { background: var(--pf-primary-2); }
+.pf-badge--error { background: var(--pf-accent); color: #fff; }
+.pf-badge--info { background: #6aa0d8; color: #06203a; }
+.pf-badge--grass { background: var(--pf-grass); color: #06270a; }
+/* badge flashOn pulse — a nameplate flashes when its entity is hit (uses individual `scale`, Safari-safe) */
+.pf-badge.is-hit { animation: pf-badge-hit 0.5s var(--pf-ease-out, ease-out); position: relative; z-index: 1; }
+@keyframes pf-badge-hit { 0% { scale: 1; filter: brightness(1); } 30% { scale: 1.4; filter: brightness(2) drop-shadow(0 0 6px #ff6a6a); } 100% { scale: 1; filter: brightness(1); } }
+
+/* ── menu — navigable game menu (main / pause / options); items reuse .pf-btn ── */
+.pf-menu { display: flex; flex-direction: column; align-items: center; gap: 14px; font-family: var(--pf-font); user-select: none; -webkit-user-select: none; }
+.pf-menu--left { align-items: flex-start; }
+.pf-menu__panel { display: flex; flex-direction: column; align-items: inherit; gap: 12px; }
+.pf-menu__title { font-family: var(--pf-font); font-size: clamp(28px, 6vw, 56px); letter-spacing: 2px; text-transform: uppercase; line-height: 1; color: var(--pf-accent); text-shadow: 0 2px 0 var(--pf-bevel-dark), 0 4px 10px rgba(0, 0, 0, 0.35); margin-bottom: 6px; }
+.pf-menu__subtitle { font-size: 12px; letter-spacing: 1px; opacity: 0.8; text-transform: uppercase; color: var(--pf-text); }
+.pf-menu__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; min-width: 220px; }
+.pf-menu__list--row { flex-direction: row; min-width: 0; }
+.pf-menu__row { display: flex; flex: 1; }
+.pf-menu__item { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.pf-menu--left .pf-menu__item { justify-content: flex-start; }
+.pf-menu__item.is-selected { background: var(--pf-accent); color: #fff; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); translate: 3px 0; }
+.pf-menu--left .pf-menu__item.is-selected::before { content: '▶'; position: absolute; left: -20px; top: 50%; translate: 0 -50%; color: var(--pf-accent); }
+.pf-menu__item.is-disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.6); }
+.pf-menu__ihint { margin-left: auto; opacity: 0.7; font-size: 11px; padding-left: 14px; }
+.pf-menu__hint { font-size: 11px; letter-spacing: 1px; opacity: 0.6; text-transform: uppercase; margin-top: 6px; text-align: center; color: var(--pf-text); }
+.pf-menu__footer { font-size: 11px; opacity: 0.6; color: var(--pf-text); }
+/* overlay / pause variant — dimmed full-screen, fades in */
+.pf-menu--overlay { position: fixed; inset: 0; z-index: 80; justify-content: center; background: rgba(8, 8, 12, 0.62); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); opacity: 0; visibility: hidden; transition: opacity 0.18s ease, visibility 0.18s; }
+.pf-menu--overlay.is-open { opacity: 1; visibility: visible; }
+.pf-menu--overlay .pf-menu__panel { padding: 24px 30px; background: var(--pf-bg); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
+.pf-menu--overlay .pf-menu__footer { position: absolute; right: 16px; bottom: 14px; }
+
+/* ── title-card — centered title / chapter screen, fades in (+ optional auto-dismiss) ── */
+.pf-titlecard { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s, background 0.5s ease; font-family: var(--pf-font); }
+.pf-titlecard.is-show { opacity: 1; visibility: visible; background: var(--pf-tc-dim, transparent); }
+.pf-titlecard.is-hide { opacity: 0; visibility: hidden; }
+.pf-titlecard--left { justify-content: flex-start; padding-left: 8vw; }
+.pf-titlecard__box { text-align: center; translate: 0 12px; transition: translate 0.6s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.pf-titlecard.is-show .pf-titlecard__box { translate: 0 0; }
+.pf-titlecard--left .pf-titlecard__box { text-align: left; }
+.pf-titlecard__overline { font-size: clamp(12px, 2vw, 18px); letter-spacing: 3px; text-transform: uppercase; color: #f0c060; margin-bottom: 8px; opacity: 0.95; }
+.pf-titlecard__title { font-size: clamp(40px, 9vw, 96px); line-height: 1; letter-spacing: 2px; color: #fbe6c0; text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45), 0 8px 18px rgba(0, 0, 0, 0.5); }
+.pf-titlecard__sub { font-size: clamp(12px, 2vw, 18px); letter-spacing: 1px; color: #e9dcc2; opacity: 0.85; margin-top: 12px; }
+
+/* ── transition — full-screen scene transitions (cover → swap → reveal). The engine
+   (core/transition.js) toggles .is-cover / .is-reveal; these classes do the visual.
+   Uses individual translate/scale props (Safari-safe; no base-transform conflict). ── */
+.pf-transition { position: fixed; inset: 0; z-index: 95; pointer-events: all; background: var(--pf-tr-color, #0b0b10); will-change: transform, opacity, clip-path, translate, scale; }
+.pf-transition.is-instant { transition: none !important; }
+/* fade family */
+.pf-transition--fade { opacity: 0; transition: opacity var(--pf-tr-cover) ease; }
+.pf-transition--fade.is-cover { opacity: 1; }
+.pf-transition--fade.is-reveal { opacity: 0; transition: opacity var(--pf-tr-reveal) ease; }
+.pf-transition--fade-white { background: var(--pf-tr-color, #ffffff); opacity: 0; transition: opacity var(--pf-tr-cover) ease; }
+.pf-transition--fade-white.is-cover { opacity: 1; }
+.pf-transition--fade-white.is-reveal { opacity: 0; transition: opacity var(--pf-tr-reveal) ease; }
+.pf-transition--flash { background: var(--pf-tr-color, #ffffff); opacity: 0; transition: opacity var(--pf-tr-cover) ease-out; }
+.pf-transition--flash.is-cover { opacity: 1; }
+.pf-transition--flash.is-reveal { opacity: 0; transition: opacity var(--pf-tr-reveal) ease-in; }
+/* slide / push */
+.pf-transition--slide-left { translate: 100% 0; transition: translate var(--pf-tr-cover) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-left.is-cover { translate: 0 0; }
+.pf-transition--slide-left.is-reveal { translate: -100% 0; transition: translate var(--pf-tr-reveal) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-right { translate: -100% 0; transition: translate var(--pf-tr-cover) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-right.is-cover { translate: 0 0; }
+.pf-transition--slide-right.is-reveal { translate: 100% 0; transition: translate var(--pf-tr-reveal) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-up { translate: 0 100%; transition: translate var(--pf-tr-cover) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-up.is-cover { translate: 0 0; }
+.pf-transition--slide-up.is-reveal { translate: 0 -100%; transition: translate var(--pf-tr-reveal) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-down { translate: 0 -100%; transition: translate var(--pf-tr-cover) cubic-bezier(.7, 0, .3, 1); }
+.pf-transition--slide-down.is-cover { translate: 0 0; }
+.pf-transition--slide-down.is-reveal { translate: 0 100%; transition: translate var(--pf-tr-reveal) cubic-bezier(.7, 0, .3, 1); }
+/* scale / pop */
+.pf-transition--scale, .pf-transition--pop { scale: 0; transition: scale var(--pf-tr-cover) cubic-bezier(.34, 1.3, .64, 1); }
+.pf-transition--scale.is-cover, .pf-transition--pop.is-cover { scale: 1.8; }
+.pf-transition--scale.is-reveal, .pf-transition--pop.is-reveal { scale: 0; transition: scale var(--pf-tr-reveal) cubic-bezier(.5, 0, .5, 1); }
+/* iris / circle (clip-path) */
+.pf-transition--iris, .pf-transition--circle { clip-path: circle(0% at 50% 50%); transition: clip-path var(--pf-tr-cover) ease-in-out; }
+.pf-transition--iris.is-cover, .pf-transition--circle.is-cover { clip-path: circle(120% at 50% 50%); }
+.pf-transition--iris.is-reveal, .pf-transition--circle.is-reveal { clip-path: circle(0% at 50% 50%); transition: clip-path var(--pf-tr-reveal) ease-in-out; }
+/* directional wipes (clip-path inset) */
+.pf-transition--wipe-right { clip-path: inset(0 100% 0 0); transition: clip-path var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-right.is-cover { clip-path: inset(0 0 0 0); }
+.pf-transition--wipe-right.is-reveal { clip-path: inset(0 0 0 100%); transition: clip-path var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-left { clip-path: inset(0 0 0 100%); transition: clip-path var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-left.is-cover { clip-path: inset(0 0 0 0); }
+.pf-transition--wipe-left.is-reveal { clip-path: inset(0 100% 0 0); transition: clip-path var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-down { clip-path: inset(0 0 100% 0); transition: clip-path var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-down.is-cover { clip-path: inset(0 0 0 0); }
+.pf-transition--wipe-down.is-reveal { clip-path: inset(100% 0 0 0); transition: clip-path var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-up { clip-path: inset(100% 0 0 0); transition: clip-path var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--wipe-up.is-cover { clip-path: inset(0 0 0 0); }
+.pf-transition--wipe-up.is-reveal { clip-path: inset(0 0 100% 0); transition: clip-path var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+/* diamond (shape wipe) */
+.pf-transition--diamond { clip-path: polygon(50% -60%, 160% 50%, 50% 160%, -60% 50%); scale: 0; transition: scale var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--diamond.is-cover { scale: 1; }
+.pf-transition--diamond.is-reveal { scale: 0; transition: scale var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+/* CRT shutdown / startup (collapse to a glowing line) */
+.pf-transition--crt { background: var(--pf-tr-color, #000); scale: 1 0.006; transition: scale var(--pf-tr-cover) cubic-bezier(.7, 0, .3, 1); box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.55); }
+.pf-transition--crt.is-cover { scale: 1 1; }
+.pf-transition--crt.is-reveal { scale: 1 0.006; transition: scale var(--pf-tr-reveal) cubic-bezier(.7, 0, .3, 1); }
+/* pixel / mosaic — a transparent canvas the engine draws into (no solid bg) */
+.pf-transition--pixel, .pf-transition--mosaic { background: transparent; }
+/* more shape wipes */
+.pf-transition--star { clip-path: polygon(50% -30%, 62% 28%, 130% 35%, 75% 65%, 95% 130%, 50% 90%, 5% 130%, 25% 65%, -30% 35%, 38% 28%); scale: 0; transition: scale var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--star.is-cover { scale: 1.4; }
+.pf-transition--star.is-reveal { scale: 0; transition: scale var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--triangle { clip-path: polygon(50% -40%, 150% 140%, -50% 140%); scale: 0; transition: scale var(--pf-tr-cover) cubic-bezier(.6, 0, .4, 1); }
+.pf-transition--triangle.is-cover { scale: 1; }
+.pf-transition--triangle.is-reveal { scale: 0; transition: scale var(--pf-tr-reveal) cubic-bezier(.6, 0, .4, 1); }
+/* combos */
+.pf-transition--scale-fade { scale: 0.6; opacity: 0; transition: scale var(--pf-tr-cover) cubic-bezier(.34, 1.2, .64, 1), opacity var(--pf-tr-cover) ease; }
+.pf-transition--scale-fade.is-cover { scale: 1; opacity: 1; }
+.pf-transition--scale-fade.is-reveal { scale: 1.5; opacity: 0; transition: scale var(--pf-tr-reveal) ease-in, opacity var(--pf-tr-reveal) ease-in; }
+.pf-transition--portal { clip-path: circle(0% at 50% 50%); transition: clip-path var(--pf-tr-cover) cubic-bezier(.5, 0, .3, 1); box-shadow: inset 0 0 60px 20px rgba(120, 180, 255, 0.7), 0 0 80px 20px rgba(80, 140, 255, 0.5); }
+.pf-transition--portal.is-cover { clip-path: circle(120% at 50% 50%); }
+.pf-transition--portal.is-reveal { clip-path: circle(0% at 50% 50%); transition: clip-path var(--pf-tr-reveal) cubic-bezier(.5, 0, .3, 1); }
+/* blur (backdrop-filter, Safari-paired) */
+.pf-transition--blur { background: transparent; -webkit-backdrop-filter: blur(0) brightness(1); backdrop-filter: blur(0) brightness(1); transition: -webkit-backdrop-filter var(--pf-tr-cover) ease, backdrop-filter var(--pf-tr-cover) ease, background var(--pf-tr-cover) ease; }
+.pf-transition--blur.is-cover { -webkit-backdrop-filter: blur(18px) brightness(0.5); backdrop-filter: blur(18px) brightness(0.5); background: rgba(10, 10, 14, 0.4); }
+.pf-transition--blur.is-reveal { -webkit-backdrop-filter: blur(0) brightness(1); backdrop-filter: blur(0) brightness(1); background: transparent; transition: -webkit-backdrop-filter var(--pf-tr-reveal) ease, backdrop-filter var(--pf-tr-reveal) ease, background var(--pf-tr-reveal) ease; }
+/* gameboy — chunky green-tint retro fade */
+.pf-transition--gameboy { background: var(--pf-tr-color, #0f380f); opacity: 0; transition: opacity var(--pf-tr-cover) steps(4); }
+.pf-transition--gameboy.is-cover { opacity: 1; }
+.pf-transition--gameboy.is-reveal { opacity: 0; transition: opacity var(--pf-tr-reveal) steps(4); }
+
+/* ── dialog — modal notice / confirm box ── */
+.pf-dialog { position: fixed; inset: 0; z-index: 82; display: flex; align-items: center; justify-content: center; background: rgba(8, 8, 12, 0.6); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); opacity: 0; visibility: hidden; transition: opacity 0.18s, visibility 0.18s; font-family: var(--pf-font); }
+.pf-dialog.is-open { opacity: 1; visibility: visible; }
+.pf-dialog__panel { min-width: 280px; max-width: 460px; background: var(--pf-bg); color: var(--pf-text); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); overflow: hidden; }
+.pf-dialog__title { font-size: 15px; letter-spacing: 1px; text-transform: uppercase; padding: 10px 16px; background: var(--pf-bg-2); border-bottom: 2px solid var(--pf-bevel-dark); color: var(--pf-accent); }
+.pf-dialog__title--info { color: #6aa0d8; }
+.pf-dialog__title--warn { color: #e0a93a; }
+.pf-dialog__title--ok { color: var(--pf-grass, #3fae57); }
+.pf-dialog__body { padding: 16px; font-size: 13px; line-height: 1.55; max-height: 50vh; overflow: auto; }
+.pf-dialog__actions { display: flex; gap: 8px; justify-content: flex-end; padding: 12px 16px; border-top: 2px solid var(--pf-bevel-dark); }
+.pf-dialog__btn { text-transform: uppercase; letter-spacing: 1px; }
+.pf-dialog__btn.is-selected { outline: 3px solid var(--pf-accent); outline-offset: 1px; translate: 0 -2px; }
+
+/* ── banner — location / chapter slide-in ── */
+.pf-banner { position: fixed; z-index: 68; display: flex; align-items: center; gap: 10px; padding: 10px 24px; font-family: var(--pf-font); color: #fbe6c0; background: linear-gradient(180deg, rgba(20, 22, 30, 0), rgba(10, 12, 18, 0.82) 45%); pointer-events: none; opacity: 0; transition: opacity 0.4s ease, translate 0.5s cubic-bezier(.22, .61, .36, 1); }
+.pf-banner--bottom-left { left: 0; bottom: 8%; padding-left: 28px; border-left: 4px solid var(--pf-accent); translate: -32px 0; }
+.pf-banner--bottom { left: 50%; bottom: 8%; translate: -50% 14px; }
+.pf-banner--top { left: 50%; top: 6%; translate: -50% -14px; }
+.pf-banner--center { left: 50%; top: 50%; translate: -50% calc(-50% + 14px); }
+.pf-banner.is-show { opacity: 1; }
+.pf-banner--bottom-left.is-show, .pf-banner--bottom.is-show, .pf-banner--top.is-show { translate: 0 0; }
+.pf-banner--bottom.is-show, .pf-banner--top.is-show { translate: -50% 0; }
+.pf-banner--center.is-show { translate: -50% -50%; }
+.pf-banner.is-hide { opacity: 0; }
+.pf-banner__inner { display: flex; flex-direction: column; }
+.pf-banner__text { font-size: clamp(16px, 3vw, 26px); letter-spacing: 1px; }
+.pf-banner__sub { font-size: 12px; opacity: 0.8; }
+.pf-banner__icon { font-size: 22px; }
+
+/* ── hint-bar — control hints with button/key glyphs ── */
+.pf-hintbar { position: fixed; left: 0; right: 0; z-index: 66; display: flex; gap: 16px; align-items: center; padding: 8px 16px; font-family: var(--pf-font); color: var(--pf-text); background: rgba(10, 12, 18, 0.55); }
+.pf-hintbar--bottom { bottom: 0; }
+.pf-hintbar--top { top: 0; }
+.pf-hintbar--center { justify-content: center; }
+.pf-hintbar--right { justify-content: flex-end; }
+.pf-hintbar--between { justify-content: space-between; }
+.pf-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: 0.5px; color: #e9dcc2; }
+.pf-hint.is-clickable { cursor: pointer; }
+.pf-hint.is-clickable:hover { color: #fff; }
+.pf-hint__key { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; font-size: 11px; color: #1a1a22; background: #e9dcc2; }
+.pf-hint--btn .pf-hint__key { border-radius: 50%; background: var(--pf-accent); color: #fff; }
+.pf-hint--kbd .pf-hint__key { border: 2px solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); background: var(--pf-bg-2); color: var(--pf-text); }
+
+/* ── hud — corner resource bars + stats ── */
+.pf-hud { position: fixed; inset: 0; z-index: 60; pointer-events: none; font-family: var(--pf-font); color: #eaf0f6; }
+.pf-hud__corner { position: absolute; display: flex; flex-direction: column; gap: 6px; padding: 12px; }
+.pf-hud__corner--top-left { top: 0; left: 0; }
+.pf-hud__corner--top { top: 0; left: 50%; translate: -50% 0; align-items: center; }
+.pf-hud__corner--top-right { top: 0; right: 0; align-items: flex-end; }
+.pf-hud__corner--left { top: 50%; left: 0; translate: 0 -50%; }
+.pf-hud__corner--right { top: 50%; right: 0; translate: 0 -50%; align-items: flex-end; }
+.pf-hud__corner--bottom-left { bottom: 0; left: 0; }
+.pf-hud__corner--bottom { bottom: 0; left: 50%; translate: -50% 0; align-items: center; }
+.pf-hud__corner--bottom-right { bottom: 0; right: 0; align-items: flex-end; }
+.pf-hud-bar { display: flex; align-items: center; gap: 8px; }
+.pf-hud-bar__icon, .pf-hud-bar__label { font-size: 12px; }
+.pf-hud-bar__track { width: 140px; height: 12px; background: rgba(0, 0, 0, 0.5); border: 2px solid; border-color: #000 #555 #555 #000; overflow: hidden; }
+.pf-hud-bar__fill { display: block; height: 100%; width: 100%; background: var(--pf-grass, #3fae57); transition: width 0.25s ease; }
+.pf-hud-bar.is-low .pf-hud-bar__fill { background: var(--pf-accent); }
+.pf-hud-bar__num { font-size: 12px; min-width: 58px; }
+.pf-hud-stat { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.pf-hud-stat__label { opacity: 0.8; }
+.pf-hud-stat__val { font-weight: 700; }
+.pf-hud-text { font-size: 12px; opacity: 0.85; }
+
+/* ── radial — ring / wheel menu ── */
+.pf-radial { font-family: var(--pf-font); }
+.pf-radial--overlay { position: fixed; inset: 0; z-index: 81; display: flex; align-items: center; justify-content: center; background: rgba(6, 9, 16, 0.72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; transition: opacity 0.16s, visibility 0.16s; }
+.pf-radial--overlay.is-open { opacity: 1; visibility: visible; }
+.pf-radial__panel { position: relative; width: 0; height: 0; display: grid; place-items: center; }
+.pf-radial__ring { position: absolute; inset: 0; }
+.pf-radial__item { position: absolute; left: 0; top: 0; width: 80px; height: 80px; margin: -40px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-family: var(--pf-font); font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; color: #cfe0f0; background: radial-gradient(circle at 38% 30%, #233247, #0e1622); border: 2px solid rgba(120, 160, 210, 0.4); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6); cursor: pointer; transition: scale 0.1s, background 0.1s, box-shadow 0.1s; }
+.pf-radial__icon { font-size: 24px; line-height: 1; }
+.pf-radial__item.is-selected { background: radial-gradient(circle at 38% 30%, #2a4a66, #12273b); border-color: var(--pf-accent); color: #fff; scale: 1.16; z-index: 1; box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.25), 0 0 24px 6px rgba(34, 211, 238, 0.6); }
+.pf-radial__center { position: absolute; display: grid; place-items: center; width: 98px; height: 98px; border-radius: 50%; text-align: center; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #eaf6ff; background: radial-gradient(circle at 40% 35%, rgba(34, 211, 238, 0.16), rgba(8, 12, 20, 0.92)); border: 2px solid rgba(34, 211, 238, 0.4); box-shadow: 0 0 30px rgba(34, 211, 238, 0.28); pointer-events: none; }
+
+/* ── level-select — node map + info panel ── */
+.pf-map { font-family: var(--pf-font); color: #eaf0f6; display: flex; flex-direction: column; gap: 16px; width: 100%; }
+.pf-map--screen { position: fixed; inset: 0; box-sizing: border-box; padding: 7vh 6vw 9vh; justify-content: center; z-index: 5;
+  background: radial-gradient(1100px 680px at 50% -8%, rgba(34, 211, 238, 0.10), transparent 60%), radial-gradient(900px 600px at 86% 112%, rgba(124, 92, 255, 0.12), transparent 60%), linear-gradient(180deg, #0a1322, #060a14 60%, #04060c); }
+.pf-map--screen::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(140% 120% at 50% 42%, transparent 55%, rgba(0, 0, 0, 0.55)); }
+.pf-map__title { font-size: clamp(22px, 4.5vw, 42px); letter-spacing: 3px; text-transform: uppercase; color: #eaf6ff; text-shadow: 0 0 18px rgba(34, 211, 238, 0.5), 0 3px 0 rgba(0, 0, 0, 0.5); position: relative; }
+.pf-map__stage { display: flex; gap: 22px; align-items: stretch; flex: 1; min-height: 0; position: relative; }
+.pf-map__area { position: relative; flex: 1; min-width: 320px; border: 2px solid rgba(120, 160, 210, 0.32); border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.6), 0 14px 50px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(circle at 50% 38%, rgba(40, 72, 112, 0.5), rgba(8, 14, 24, 0.92) 70%), repeating-linear-gradient(0deg, transparent 0 27px, rgba(120, 160, 210, 0.045) 27px 28px), repeating-linear-gradient(90deg, transparent 0 27px, rgba(120, 160, 210, 0.045) 27px 28px); }
+.pf-map:not(.pf-map--screen) .pf-map__area { aspect-ratio: 16 / 9; }
+.pf-map__links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pf-map__link { stroke: rgba(140, 180, 230, 0.4); stroke-width: 0.7; stroke-linecap: round; stroke-dasharray: 1.5 1.5; }
+.pf-map__link.is-done { stroke: var(--pf-grass, #34d399); stroke-width: 0.9; stroke-dasharray: none; filter: drop-shadow(0 0 2px rgba(52, 211, 153, 0.6)); }
+.pf-map__node { position: absolute; translate: -50% -50%; display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 0; font-family: var(--pf-font); color: #eaf0f6; }
+.pf-map__dot { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; color: #dffaff; background: radial-gradient(circle at 36% 30%, #3a536f, #131d2c); border: 2px solid #5b7a9c; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); transition: scale 0.12s, box-shadow 0.12s; }
+.pf-map__node.is-done .pf-map__dot { background: radial-gradient(circle at 36% 30%, #5fe08e, #1f8a4a); border-color: #9ff0b8; color: #053018; }
+.pf-map__node.is-locked .pf-map__dot { background: #161c26; border-color: #2b3340; color: #5a6577; box-shadow: none; }
+.pf-map__node.is-selected .pf-map__dot { border-color: var(--pf-accent); color: #fff; scale: 1.22; animation: pf-map-pulse 1.5s ease-in-out infinite; }
+@keyframes pf-map-pulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.22), 0 0 18px 5px rgba(34, 211, 238, 0.6); } 50% { box-shadow: 0 0 0 7px rgba(34, 211, 238, 0.12), 0 0 28px 9px rgba(34, 211, 238, 0.85); } }
+.pf-map__nodelabel { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: #cfe0f0; text-shadow: 0 1px 3px #000; white-space: nowrap; padding: 1px 6px; background: rgba(8, 12, 20, 0.55); border-radius: 2px; }
+.pf-map__node.is-selected .pf-map__nodelabel { color: #fff; background: rgba(34, 211, 238, 0.18); }
+.pf-map__info { width: 240px; flex: none; background: linear-gradient(180deg, rgba(16, 24, 38, 0.86), rgba(8, 12, 20, 0.9)); border: 2px solid rgba(120, 160, 210, 0.32); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4); }
+.pf-map__infotitle { font-size: 18px; letter-spacing: 1px; text-transform: uppercase; color: #fbe6c0; }
+.pf-map__infostatus { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 2px 9px; align-self: flex-start; border: 1px solid currentColor; border-radius: 2px; }
+.pf-map__infostatus.is-open { color: var(--pf-grass, #34d399); }
+.pf-map__infostatus.is-locked { color: #6b7688; }
+.pf-map__infostatus.is-done { color: #6aa0d8; }
+.pf-map__infobody { font-size: 12px; line-height: 1.65; opacity: 0.85; }
+.pf-map__hint { font-size: 11px; opacity: 0.55; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; position: relative; }
+
+/* ── transition-gallery — interactive transition showcase ── */
+.pf-trg { position: fixed; inset: 0; display: flex; flex-direction: column; font-family: var(--pf-font); }
+.pf-trg__stage { flex: 1; position: relative; display: grid; place-items: center; transition: background 0.3s ease; overflow: hidden; background: #10243a; }
+.pf-trg__scene { font-size: clamp(30px, 7vw, 72px); letter-spacing: 3px; text-transform: uppercase; color: #fff; text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45), 0 0 36px rgba(0, 0, 0, 0.5); }
+.pf-trg__panel { background: rgba(8, 10, 16, 0.94); border-top: 2px solid var(--pf-bevel-dark); padding: 14px 20px 18px; display: flex; flex-direction: column; gap: 12px; }
+.pf-trg__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pf-trg__title { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--pf-accent); }
+.pf-trg__all { font-size: 12px; padding: 6px 14px; }
+.pf-trg__grid { display: grid; grid-template-columns: repeat(var(--pf-trg-cols, 5), 1fr); gap: 8px; }
+.pf-trg__btn { font-size: 12px; letter-spacing: 0.5px; padding: 9px 6px; text-transform: lowercase; }
+.pf-trg__btn.is-selected { background: var(--pf-accent); color: #fff; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); translate: 0 -2px; }
+.pf-trg__btn.is-playing { animation: pf-trg-play 0.45s ease; }
+@keyframes pf-trg-play { 0%, 100% { filter: brightness(1); } 45% { filter: brightness(1.7); } }
+.pf-trg__hint { font-size: 11px; opacity: 0.55; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── glitch — intense RGB-split + drift over an image region (rides image-parallax) ── */
+.pf-glitch { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 0.18s; }
+.pf-glitch.is-on { opacity: 1; }
+.pf-glitch__l { position: absolute; inset: -3%; background-repeat: no-repeat; will-change: translate, clip-path; }
+.pf-glitch__l--r { mix-blend-mode: screen; filter: sepia(1) saturate(7) hue-rotate(-32deg) brightness(1.1); opacity: 0; }
+.pf-glitch__l--c { mix-blend-mode: screen; filter: sepia(1) saturate(7) hue-rotate(150deg) brightness(1.1); opacity: 0; }
+.pf-glitch.is-on .pf-glitch__l--base { animation: pf-gl-jit 0.13s steps(2) infinite; }
+.pf-glitch.is-on .pf-glitch__l--r { opacity: 0.85; animation: pf-gl-r 0.22s steps(3) infinite; }
+.pf-glitch.is-on .pf-glitch__l--c { opacity: 0.85; animation: pf-gl-c 0.28s steps(3) infinite; }
+.pf-glitch__tear { position: absolute; inset: 0; mix-blend-mode: overlay; opacity: 0; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 3px); }
+.pf-glitch.is-on .pf-glitch__tear { opacity: 1; animation: pf-gl-tear 0.9s steps(8) infinite, pf-gl-band 1.7s steps(5) infinite; }
+@keyframes pf-gl-jit { 0% { translate: 0 0; } 50% { translate: 2px -1px; } 100% { translate: -2px 1px; } }
+@keyframes pf-gl-r { 0% { translate: -7px 0; clip-path: inset(0 0 68% 0); } 33% { translate: 9px 0; clip-path: inset(38% 0 28% 0); } 66% { translate: -12px 0; clip-path: inset(70% 0 0 0); } 100% { translate: 6px 0; clip-path: inset(12% 0 56% 0); } }
+@keyframes pf-gl-c { 0% { translate: 7px 0; clip-path: inset(18% 0 50% 0); } 33% { translate: -9px 0; clip-path: inset(54% 0 20% 0); } 66% { translate: 13px 0; clip-path: inset(0 0 78% 0); } 100% { translate: -6px 0; clip-path: inset(34% 0 34% 0); } }
+@keyframes pf-gl-tear { 0% { background-position: 0 0; } 100% { background-position: 0 9px; } }
+@keyframes pf-gl-band { 0%, 100% { clip-path: inset(0 0 0 0); } 20% { clip-path: inset(30% 0 40% 0); } 21% { clip-path: inset(0 0 0 0); } 60% { clip-path: inset(0 0 0 0); } 62% { clip-path: inset(62% 0 8% 0); } 64% { clip-path: inset(0 0 0 0); } }
+
+/* ── Button variants (extend .pf-btn) — theme-adaptive via color-mix ────────── */
+.pf-btn--accent {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--pf-accent) 78%, #fff), var(--pf-accent));
+  color: #fff;
+}
+.pf-btn--grass {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--pf-grass) 78%, #fff), var(--pf-grass));
+  color: var(--pf-primary-ink);
+}
+
+/* ── Stat card ─────────────────────────────────────────────────────────────── */
+.pf-stat {
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+  padding: 12px 14px;
+  min-width: 120px;
+}
+.pf-stat__label {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--pf-muted);
+  letter-spacing: 0.5px;
+}
+.pf-stat__value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--pf-accent);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+}
+
+/* ── Counter (animated number) ─────────────────────────────────────────────── */
+.pf-counter {
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+  padding: 12px 14px;
+  min-width: 120px;
+}
+.pf-counter__label {
+  font-size: 14px; text-transform: uppercase; color: var(--pf-muted); letter-spacing: 0.5px;
+}
+.pf-counter__value {
+  font-size: 34px; font-weight: 700; color: var(--pf-accent);
+  font-variant-numeric: tabular-nums; margin-top: 4px; transform-origin: left center;
+}
+
+/* ── Stage / attachments (pin media to sections at angles) ─────────────────── */
+.pf-stage { position: relative; }
+.pf-stage__content { position: relative; z-index: 1; }
+.pf-attach { position: absolute; line-height: 0; }
+.pf-attach--float { animation: pf-float 4s ease-in-out infinite; }
+/* a panel/card carrying attachments becomes a positioning context; its body sits
+   above any `behind` decoration (which then reads like a watermark) */
+.pf-has-attach { position: relative; }
+.pf-has-attach > .pf-panel__body,
+.pf-has-attach > .pf-card__title { position: relative; z-index: 1; }
+
+/* ── Media (image · gif · video · embed) ───────────────────────────────────── */
+.pf-media { margin: 0; display: inline-grid; gap: 8px; max-width: 100%; }
+/* borderless by default — no frame, no background, just the media */
+.pf-media__box { position: relative; overflow: hidden; display: block; }
+/* opt-in beveled frame */
+.pf-media--frame .pf-media__box {
+  padding: 4px;
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  box-shadow: var(--pf-shadow);
+}
+.pf-media__img, .pf-media__video { display: block; width: 100%; height: auto; border: 0; }
+.pf-media__iframe { display: block; width: 100%; height: 100%; border: 0; }
+/* when a ratio is set, the box enforces it and the media fills it */
+.pf-media__box--ratio { display: grid; }
+.pf-media__box--ratio > .pf-media__img,
+.pf-media__box--ratio > .pf-media__video { height: 100%; object-fit: contain; }
+.pf-media--pixel { image-rendering: pixelated; }
+.pf-media__caption { font-size: 13px; color: var(--pf-muted); text-align: center; }
+.pf-media__link { display: inline-block; line-height: 0; }
+
+/* ── Full-screen backdrops (bg-video · scene) ──────────────────────────────────
+   Portaled to <body> by _fullscreen.js and tucked behind in-flow content with a
+   negative z-index (set inline). Never intercepts pointer events. The media is
+   absolutely filled + clipped so a scaled/panning image can't reveal edges. */
+.pf-backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* z-index is set inline (default -1) so callers can restack per scene */
+}
+.pf-backdrop__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* overridden inline by spec.fit */
+  display: block;
+}
+.pf-backdrop__scrim { position: absolute; inset: 0; }
+.pf-backdrop__anchor { display: none; }
+
+/* ── Hero (landing) ────────────────────────────────────────────────────────── */
+.pf-hero {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 28px; align-items: center;
+  padding: 44px 28px;
+  background: linear-gradient(160deg, var(--pf-surface), var(--pf-bg-2));
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+}
+.pf-hero > * { position: relative; z-index: 1; }
+.pf-hero--center { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+.pf-hero__content { display: grid; gap: 14px; justify-items: start; }
+.pf-hero--center .pf-hero__content { justify-items: center; }
+.pf-hero__kicker {
+  font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--pf-muted);
+  border: 1px solid var(--pf-border); padding: 4px 10px;
+}
+.pf-hero__title {
+  margin: 0; font-size: clamp(34px, 6vw, 66px); line-height: 1; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: #fff;
+  text-shadow: 3px 3px 0 var(--pf-accent), 6px 6px 0 rgba(0, 0, 0, 0.3);
+}
+.pf-hero__subtitle { font-size: 18px; text-transform: uppercase; color: var(--pf-primary); font-weight: 700; }
+.pf-hero__body { margin: 0; color: var(--pf-muted); max-width: 48ch; line-height: 1.5; font-size: 16px; }
+.pf-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.pf-hero__art { display: grid; place-items: center; min-height: 200px; }
+.pf-hero__img { max-width: 100%; image-rendering: pixelated; }
+.pf-hero__monument {
+  width: 150px; height: 150px; position: relative; image-rendering: pixelated;
+  background: linear-gradient(135deg, var(--pf-primary-2), var(--pf-primary));
+  border: 4px solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--pf-primary) 50%, transparent), 8px 8px 0 rgba(0, 0, 0, 0.35);
+  animation: pf-float 3s ease-in-out infinite;
+}
+.pf-hero__monument::after {
+  content: ""; position: absolute; inset: 32%; background: var(--pf-accent);
+  box-shadow: 0 0 20px var(--pf-accent);
+}
+
+/* ── Portrait (character / faction card) ───────────────────────────────────── */
+.pf-portrait {
+  display: grid; gap: 10px; justify-items: center; text-align: center; max-width: 280px;
+  padding: 18px;
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+}
+.pf-portrait__kicker { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--pf-muted); }
+.pf-portrait__frame {
+  position: relative; width: 100%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  background: linear-gradient(160deg, var(--pf-surface-2), var(--pf-bg-2));
+  border: 3px solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+}
+.pf-portrait__img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.pf-portrait__ph { font-size: 72px; font-weight: 700; color: var(--pf-primary); }
+.pf-portrait__stat {
+  position: absolute; top: 8px; right: 8px; display: grid; text-align: right;
+  background: rgba(0, 0, 0, 0.45); padding: 4px 8px;
+}
+.pf-portrait__stat b { color: var(--pf-accent); font-size: 18px; }
+.pf-portrait__stat span { font-size: 11px; color: var(--pf-muted); text-transform: uppercase; }
+.pf-portrait__name { font-size: 26px; font-weight: 700; text-transform: uppercase; color: #fff; letter-spacing: 1px; }
+.pf-portrait__body { font-size: 14px; color: var(--pf-muted); margin: 0; line-height: 1.4; }
+
+/* ── Feature card (promo widget) ───────────────────────────────────────────── */
+.pf-fcard {
+  display: flex; gap: 12px; align-items: center; padding: 12px; max-width: 340px;
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+}
+.pf-fcard__img, .pf-fcard__ph {
+  width: 56px; height: 56px; flex: none; image-rendering: pixelated;
+  background: linear-gradient(135deg, var(--pf-primary-2), var(--pf-primary));
+  border: 2px solid var(--pf-bevel-dark);
+}
+.pf-fcard__body { display: grid; gap: 3px; }
+.pf-fcard__label { font-size: 11px; text-transform: uppercase; color: var(--pf-accent); letter-spacing: 1px; }
+.pf-fcard__title { font-weight: 700; font-size: 16px; }
+.pf-fcard__text { margin: 0; font-size: 13px; color: var(--pf-muted); }
+.pf-fcard .pf-btn { margin-top: 6px; justify-self: start; padding: 5px 10px; font-size: 13px; }
+
+/* ── Icon select (faction bar) ─────────────────────────────────────────────── */
+.pf-iconsel { display: flex; gap: 8px; flex-wrap: wrap; }
+.pf-iconsel__tile {
+  width: 52px; height: 52px; display: grid; place-items: center; cursor: pointer; font-size: 22px;
+  color: var(--pf-text); background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  transition: transform var(--pf-dur-fast) var(--pf-ease-out), border-color var(--pf-dur-fast);
+}
+.pf-iconsel__tile:hover { transform: translateY(-2px); }
+.pf-iconsel__tile.is-active {
+  border-color: var(--pf-accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--pf-accent) 50%, transparent);
+}
+.pf-iconsel__img { width: 70%; height: 70%; image-rendering: pixelated; }
+
+/* ── Layout: panel · row · tabs ────────────────────────────────────────────── */
+.pf-panel__body { display: grid; gap: var(--pf-gap); }
+.pf-row { display: flex; flex-wrap: wrap; }
+.pf-row > * { flex: 1 1 auto; }
+
+/* ── Center: centers its children on the page (justify/align set inline) ─────── */
+.pf-center {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+}
+.pf-center > * { max-width: 100%; min-width: 0; }
+/* when a maxWidth is given, children fill up to that cap (centered as a column) */
+.pf-center--capped > * { width: 100%; max-width: var(--pf-center-max, 100%); }
+/* viewport-tall so children sit in the middle of the screen (Safari 15.4+ svh) */
+.pf-center--viewport { min-height: 100vh; min-height: 100svh; }
+/* full-page fixed overlay variant — centers over the WHOLE viewport (escapes
+   #app's 860px column + topbar). Click-through except its children, so the empty
+   centered overlay never blocks the topbar / wallet button underneath. */
+.pf-center--fullpage { position: fixed; inset: 0; min-height: 0; pointer-events: none; }
+.pf-center--fullpage > * { pointer-events: auto; }
+
+/* ── Gate: a hidden state that reveals its children on unlock ─────────────────── */
+.pf-gate { display: grid; gap: var(--pf-gap); }
+.pf-gate.is-locked:empty { display: none; }            /* no box when locked + no hint */
+.pf-gate--reveal { animation: pf-pop var(--pf-dur, 0.26s) var(--pf-ease-out) both; }
+
+/* ── Steps: interactive quest / checklist ────────────────────────────────────── */
+.pf-steps { display: grid; gap: var(--pf-gap); }
+.pf-steps__head { display: flex; align-items: center; gap: 10px; }
+.pf-steps__bar {
+  flex: 1; height: 12px; overflow: hidden;
+  background: var(--pf-surface-3);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+}
+.pf-steps__fill {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  transition: width 0.35s var(--pf-ease-out);
+}
+.pf-steps__count { font-size: 13px; color: var(--pf-muted); white-space: nowrap; }
+.pf-steps__list { display: grid; gap: 12px; }
+.pf-step {
+  display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 12px;
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+}
+.pf-step__marker {
+  width: 28px; height: 28px; display: grid; place-items: center; font-weight: 700; color: #fff;
+  background: var(--pf-surface-3); border: 2px solid var(--pf-bevel-dark);
+}
+.pf-step.is-done { opacity: 0.92; }
+.pf-step.is-done .pf-step__marker { background: var(--pf-grass); border-color: #2f5d20; }
+.pf-step__label { font-weight: 700; }
+.pf-step__hint { font-size: 12px; color: var(--pf-muted); margin-top: 2px; }
+.pf-step__content { margin-top: 8px; display: grid; gap: 8px; justify-items: start; }
+.pf-step__content--click { cursor: pointer; }
+.pf-step__content--click:hover { filter: brightness(1.07); }
+.pf-step__answer { display: flex; gap: 8px; width: 100%; }
+.pf-step__answer .pf-input { flex: 1; }
+.pf-step__msg { font-size: 12px; color: var(--pf-accent); min-height: 0; }
+.pf-steps__done[hidden] { display: none; }
+
+/* steps — CANVAS layout: free-positioned step elements (absolute) */
+.pf-steps__canvas { position: relative; width: 100%; overflow: visible; }
+.pf-step--canvas {
+  /* free-floating element: drop the row chrome (box/border) AND the 2-col grid */
+  padding: 0; background: none; border: 0;
+  display: grid; grid-template-columns: 1fr; gap: 6px; justify-items: center;
+  width: max-content; max-width: 100%;
+}
+.pf-step--canvas .pf-step__content { margin-top: 0; justify-items: center; justify-self: stretch; }
+.pf-step--canvas .pf-step__caption { justify-self: stretch; }
+.pf-step--canvas .pf-step__marker {
+  position: absolute; top: -12px; left: -12px; z-index: 3;
+  width: 26px; height: 26px; box-shadow: 2px 2px 0 var(--pf-shadow-color);
+}
+.pf-step__caption { font-size: 12px; color: var(--pf-muted); text-align: center; }
+.pf-step--canvas.is-done { filter: drop-shadow(0 0 0 transparent); }
+
+/* steps — FULLSCREEN canvas: fixed full-viewport, no chrome. Portaled to <body>.
+   Click-through except the step elements / head / payoff (so a topbar stays usable). */
+.pf-steps--full { position: fixed; inset: 0; z-index: 5; margin: 0; }
+.pf-steps--full .pf-steps__canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pf-steps--full .pf-step--canvas { pointer-events: auto; }
+.pf-steps--full .pf-steps__head {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  width: min(520px, 90%); z-index: 6; pointer-events: auto;
+}
+/* :not([hidden]) so the EMPTY payoff host doesn't override `hidden` and cover the
+   screen (it has the same specificity as .pf-steps__done[hidden] and came later,
+   which made an invisible full-screen layer eat every click). */
+.pf-steps--full .pf-steps__done:not([hidden]) {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; pointer-events: auto;
+}
+.pf-steps__anchor { display: none; }
+
+/* ── Scroll-trigger: an in-flow section that fires events as it scrolls ───────── */
+.pf-scrolltrigger { position: relative; display: grid; align-content: center; justify-items: center; }
+.pf-scrolltrigger__label {
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--pf-muted);
+  opacity: 0.8;
+}
+
+/* ── Timeline: spawned-track layer (move-tracks restyle existing elements) ────── */
+.pf-tllayer { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+.pf-tl-spawned { position: absolute; will-change: translate, scale, opacity; line-height: 0; font-size: 44px; }
+
+/* ── Spawn point: spawns things from a live-anchored point ────────────────────── */
+.pf-spawnlayer { position: fixed; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+.pf-spawn { position: absolute; translate: -50% -50%; will-change: transform, opacity; line-height: 0; }
+.pf-spawn--rise  { animation: pf-spawn-rise var(--slife, 1s) ease-out forwards; }
+.pf-spawn--fall  { animation: pf-spawn-fall var(--slife, 1s) ease-in forwards; }
+.pf-spawn--pop   { animation: pf-spawn-pop var(--slife, 1s) var(--pf-ease-out) forwards; }
+.pf-spawn--drift { animation: pf-spawn-drift var(--slife, 1s) ease-out forwards; }
+@keyframes pf-spawn-rise  { 0% { translate: -50% -50%; opacity: 0; scale: 0.7; } 18% { opacity: 1; scale: 1; } 100% { translate: -50% calc(-50% - 64px); opacity: 0; } }
+@keyframes pf-spawn-fall  { 0% { translate: -50% -50%; opacity: 1; } 100% { translate: -50% calc(-50% + 80px); opacity: 0; } }
+@keyframes pf-spawn-pop   { 0% { scale: 0; opacity: 0; } 35% { scale: 1.18; opacity: 1; } 75% { scale: 1; } 100% { scale: 1; opacity: 0; } }
+@keyframes pf-spawn-drift { 0% { translate: -50% -50%; opacity: 1; } 100% { translate: calc(-50% + var(--sx, 0px)) calc(-50% + var(--sy, 0px)); opacity: 0; } }
+.pf-spawn__marker {
+  position: absolute; width: 10px; height: 10px; translate: -50% -50%; border-radius: 50%;
+  background: var(--pf-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pf-accent) 40%, transparent);
+}
+
+/* ── Projectile (flying arrow) ───────────────────────────────────────────────── */
+.pf-projlayer { position: fixed; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+.pf-proj { position: absolute; will-change: translate; transform-origin: center; }
+.pf-proj__img { display: block; width: 100%; image-rendering: pixelated; }
+.pf-proj--arrow { height: 5px; background: linear-gradient(90deg, #6f4a22 0 70%, #8a5a2b 70% 100%); }
+.pf-proj--arrow::after { /* steel head */
+  content: ''; position: absolute; right: -9px; top: 50%; translate: 0 -50%;
+  border: 6px solid transparent; border-left: 10px solid #c9ced6; border-right: 0;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.4));
+}
+.pf-proj--arrow::before { /* fletching */
+  content: ''; position: absolute; left: -1px; top: 50%; translate: 0 -50%;
+  width: 9px; height: 11px; background: #c0392b;
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 35% 50%);
+}
+
+/* ── Particles (blood / sparks) ──────────────────────────────────────────────── */
+.pf-particles { position: fixed; inset: 0; z-index: 7; pointer-events: none; overflow: hidden; }
+.pf-particles__burst { position: absolute; width: 0; height: 0; }
+.pf-particles__p {
+  position: absolute; left: 0; top: 0; border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
+  animation: pf-particle-fly var(--pdur, 0.7s) cubic-bezier(.2,.7,.4,1) forwards;
+}
+@keyframes pf-particle-fly {
+  0%   { translate: 0 0; opacity: 1; }
+  70%  { opacity: 1; }
+  100% { translate: var(--px, 0) calc(var(--py, 0) + var(--pg, 40px)); opacity: 0; }
+}
+
+/* ── Health bar with white damage-lag ────────────────────────────────────────── */
+.pf-hpbar { display: inline-grid; gap: 3px; justify-items: center; }
+.pf-hpbar--fixed { position: fixed; z-index: 8; translate: -50% 0; pointer-events: none; }
+.pf-hpbar__name { font-size: 11px; color: #fff; text-shadow: 1px 1px 0 #000; letter-spacing: 1px; text-transform: uppercase; }
+.pf-hpbar__track {
+  position: relative; width: 120px; height: 14px; overflow: hidden;
+  background: #2a0d0d; border: 2px solid #000; box-shadow: 0 2px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.pf-hpbar__ghost { /* white lag — trails behind on each drop */
+  position: absolute; left: 0; top: 0; bottom: 0; width: 100%;
+  background: #fff; transition: width 0.55s ease 0.18s;
+}
+.pf-hpbar__fill { /* current HP — snaps fast */
+  position: absolute; left: 0; top: 0; bottom: 0; width: 100%;
+  background: linear-gradient(180deg, #8fe06a 0 50%, #3da53a 50% 100%);
+  transition: width 0.12s ease;
+}
+.pf-hpbar.is-low .pf-hpbar__fill { background: linear-gradient(180deg, #ef6b58 0 50%, #c0392b 50% 100%); }
+.pf-hpbar__dmg {
+  position: absolute; top: -6px; right: -4px; font-size: 16px; font-weight: 700;
+  color: #fff; text-shadow: 2px 2px 0 #000; opacity: 0; pointer-events: none;
+}
+.pf-hpbar__dmg.is-pop { animation: pf-dmgpop 0.7s var(--pf-ease-out) forwards; }
+@keyframes pf-dmgpop {
+  0%   { opacity: 0; translate: 0 4px; scale: 0.6; }
+  25%  { opacity: 1; translate: 0 -6px; scale: 1.15; }
+  100% { opacity: 0; translate: 0 -22px; scale: 1; }
+}
+/* pop-up appear/hide */
+.pf-hpbar { transition: opacity 0.18s ease, translate 0.18s var(--pf-ease-out); }
+.pf-hpbar.is-hidden { opacity: 0; translate: 0 8px; }
+.pf-hpbar--fixed.is-hidden { translate: -50% 14px; }
+
+/* ── Hover-outline: trace a child's silhouette on hover (great for sprites) ───── */
+.pf-houtline {
+  display: inline-block; line-height: 0;
+  transition: filter 0.12s ease, translate 0.14s var(--pf-ease-out), scale 0.14s var(--pf-ease-out);
+}
+/* hard outline = 4 axis drop-shadows on the alpha edges */
+.pf-houtline:hover,
+.pf-houtline:focus-within,
+.pf-houtline--on {
+  filter:
+    drop-shadow(var(--ho-w, 2px) 0 0 var(--ho-c, var(--pf-accent)))
+    drop-shadow(calc(-1 * var(--ho-w, 2px)) 0 0 var(--ho-c, var(--pf-accent)))
+    drop-shadow(0 var(--ho-w, 2px) 0 var(--ho-c, var(--pf-accent)))
+    drop-shadow(0 calc(-1 * var(--ho-w, 2px)) 0 var(--ho-c, var(--pf-accent)));
+}
+/* soft glow variant */
+.pf-houtline--glow:hover,
+.pf-houtline--glow:focus-within,
+.pf-houtline--glow.pf-houtline--on {
+  filter:
+    drop-shadow(0 0 4px var(--ho-glow, var(--ho-c, var(--pf-accent))))
+    drop-shadow(0 0 8px var(--ho-glow, var(--ho-c, var(--pf-accent))));
+}
+.pf-houtline--lift:hover { translate: 0 -4px; }
+.pf-houtline--scale:hover { scale: 1.05; }
+
+/* ── Hotspots: Flash-style interactive scene layer ───────────────────────────── */
+.pf-hotspots { position: relative; width: 100%; height: 100%; }
+.pf-hotspots--full { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+.pf-hotspots--full > * { pointer-events: auto; }
+/* world variant: fills the cover-scaled stage; spot %s are world-relative */
+.pf-hotspots--world { position: absolute; inset: 0; pointer-events: none; }
+.pf-hotspots--world > * { pointer-events: auto; }
+.pf-hotspots__scrim { position: absolute; inset: 0; pointer-events: none; }
+.pf-hotspots__anchor { display: none; }
+
+.pf-hotspot { position: absolute; }
+.pf-hotspot--active { cursor: pointer; }
+.pf-hotspot__marker {
+  width: var(--hs-size, 34px); height: var(--hs-size, 34px);
+  display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 15px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pf-primary) 82%, transparent);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--pf-accent) 45%, transparent), 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.12s var(--pf-ease-out);
+}
+.pf-hotspot--active:hover .pf-hotspot__marker,
+.pf-hotspot--active:focus-visible .pf-hotspot__marker { transform: scale(1.14); }
+.pf-hotspot__marker--dot { width: 16px; height: 16px; }
+.pf-hotspot__marker--hidden { opacity: 0; width: 100%; height: 100%; border-radius: 0; } /* invisible region */
+.pf-hotspot__marker--pulse { animation: pf-hs-pulse 2.2s var(--pf-ease-in-out) infinite; }
+@keyframes pf-hs-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--pf-accent) 45%, transparent), 0 4px 10px rgba(0, 0, 0, 0.5); }
+  50%      { box-shadow: 0 0 0 13px color-mix(in srgb, var(--pf-accent) 0%, transparent), 0 4px 10px rgba(0, 0, 0, 0.5); }
+}
+.pf-hotspot__label {
+  position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%);
+  white-space: nowrap; padding: 5px 9px; font-size: 12px; color: var(--pf-text);
+  background: var(--pf-surface-3);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 2px 2px 0 var(--pf-shadow-color);
+  opacity: 0; visibility: hidden; transition: opacity 0.12s ease; pointer-events: none; z-index: 2;
+}
+.pf-hotspot:hover .pf-hotspot__label,
+.pf-hotspot:focus-within .pf-hotspot__label { opacity: 1; visibility: visible; }
+
+.pf-tabs { min-width: 0; max-width: 100%; }
+.pf-tabs__nav {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;          /* horizontal scroller — tabs never overflow the page */
+  scrollbar-width: none;
+}
+.pf-tabs__nav::-webkit-scrollbar { display: none; }
+.pf-tab {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  flex: 0 0 auto;            /* keep size; nav scrolls instead of cramming */
+  white-space: nowrap;
+  color: var(--pf-text);
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  border-bottom: none;
+  padding: 7px 14px;
+  transition: background var(--pf-dur-fast) var(--pf-ease-out),
+    color var(--pf-dur-fast) var(--pf-ease-out);
+}
+.pf-tab:not(.is-active):hover { filter: brightness(1.1); }
+.pf-tab.is-active {
+  background: var(--pf-surface);
+  color: var(--pf-accent);
+  position: relative;
+  top: 1px;
+}
+.pf-tabs__panes {
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+  padding: 16px;
+}
+.pf-tabs__pane[hidden] { display: none; }
+.pf-tabs__pane { display: grid; gap: var(--pf-gap); }
+
+/* ── Toggle / switch ───────────────────────────────────────────────────────── */
+.pf-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+.pf-toggle__label {
+  font-size: 16px;
+  text-transform: uppercase;
+  color: var(--pf-text);
+}
+.pf-switch {
+  width: 48px;
+  height: 24px;
+  padding: 2px;
+  cursor: pointer;
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+}
+.pf-switch.is-on { background: var(--pf-grass); }
+.pf-switch__knob {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: var(--pf-surface);
+  border: 2px solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  transition: transform 0.08s steps(2);
+}
+.pf-switch.is-on .pf-switch__knob { transform: translateX(24px); }
+
+/* ── Progress bar (HP etc.) — width animates so reconcile playouts are smooth ── */
+.pf-progress { display: grid; gap: 4px; }
+.pf-progress__label {
+  font-size: 14px; text-transform: uppercase; color: var(--pf-muted); letter-spacing: 0.5px;
+}
+.pf-progress__track {
+  height: 18px;
+  background: var(--pf-surface-2);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  overflow: hidden;
+}
+.pf-progress__fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  transition: width 0.45s var(--pf-ease-out);
+}
+.pf-progress__fill--grass { background: linear-gradient(180deg, color-mix(in srgb, var(--pf-grass) 75%, #fff) 0 50%, var(--pf-grass) 50% 100%); }
+.pf-progress__fill--accent { background: linear-gradient(180deg, color-mix(in srgb, var(--pf-accent) 75%, #fff) 0 50%, var(--pf-accent) 50% 100%); }
+.pf-progress__value {
+  font-size: 14px; color: var(--pf-text); font-variant-numeric: tabular-nums;
+}
+
+/* ── Indicator / LED — pulses on flip ──────────────────────────────────────── */
+.pf-indicator { display: inline-flex; align-items: center; gap: 8px; }
+.pf-indicator__label, .pf-indicator__state {
+  font-size: 16px; text-transform: uppercase; color: var(--pf-text);
+}
+.pf-led {
+  width: 16px; height: 16px; display: inline-block;
+  background: var(--pf-surface-2);
+  border: 2px solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.4);
+  transition: background 0.2s steps(2), box-shadow 0.2s steps(2);
+}
+.pf-led.is-on {
+  background: var(--pf-accent);
+  box-shadow: 0 0 8px var(--pf-accent), inset 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+.pf-led.is-on.pf-led--grass { background: var(--pf-grass); box-shadow: 0 0 8px var(--pf-grass); }
+.pf-led--pulse { animation: pf-led-pulse 0.45s steps(3); }
+@keyframes pf-led-pulse {
+  0% { transform: scale(1.6); }
+  100% { transform: scale(1); }
+}
+
+/* ── Timer ─────────────────────────────────────────────────────────────────── */
+.pf-timer { display: inline-flex; align-items: center; gap: 8px; }
+.pf-timer__label { font-size: 14px; text-transform: uppercase; color: var(--pf-muted); }
+.pf-timer__value {
+  font-size: 24px; font-weight: 700; color: var(--pf-accent);
+  font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right;
+}
+
+/* ── Feed — rows slide in as they're appended (playout) ────────────────────── */
+.pf-feed { display: grid; gap: 4px; }
+.pf-feed__row {
+  padding: 6px 10px;
+  background: var(--pf-surface-2);
+  border-left: 4px solid var(--pf-primary);
+  animation: pf-row-in var(--pf-dur, 0.26s) var(--pf-ease-out) both;
+}
+.pf-feed__row:nth-child(odd) { background: var(--pf-surface-3); }
+@keyframes pf-feed-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Select ────────────────────────────────────────────────────────────────── */
+.pf-select {
+  font: inherit; font-size: 16px;
+  background: var(--pf-surface); color: var(--pf-text);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  padding: 7px 9px; width: 100%;
+}
+.pf-select:focus { outline: 1px dashed var(--pf-primary); outline-offset: 1px; }
+
+/* ── Table ─────────────────────────────────────────────────────────────────── */
+.pf-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+}
+.pf-th {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  padding: 6px 10px;
+  border-bottom: var(--pf-bevel) solid var(--pf-bevel-dark);
+}
+.pf-td {
+  font-size: 16px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--pf-border);
+}
+.pf-tr:nth-child(odd) .pf-td { background: var(--pf-surface-3); }
+.pf-tr { animation: pf-row-in var(--pf-dur, 0.26s) var(--pf-ease-out) both; }
+
+/* ── Modal ─────────────────────────────────────────────────────────────────── */
+.pf-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pf-overlay);
+  z-index: 100;
+  padding: 20px;
+}
+.pf-modal-overlay[hidden] { display: none; }
+.pf-modal {
+  width: min(560px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+  background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
+  animation: pf-pop var(--pf-dur, 0.26s) var(--pf-ease-out) both;
+}
+@keyframes pf-modal-in {
+  from { transform: translateY(-8px) scale(0.98); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.pf-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  border-bottom: var(--pf-bevel) solid var(--pf-bevel-dark);
+}
+.pf-modal__title { color: #fff; font-weight: 700; text-transform: uppercase; }
+.pf-modal__close {
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+}
+.pf-modal__body { padding: 16px; display: grid; gap: var(--pf-gap); }
+
+/* ── horror NOTE modal (modal `class:'pf-note'`) — a torn, stained, SEMI-TRANSPARENT
+   lined-paper note scrawled in charcoal, askew on a smoky dark scrim (Granny-style).
+   Safari: clip-path + backdrop-filter are paired/prefixed; 'Marker Felt' is a macOS
+   marker hand (falls back to cursive elsewhere). */
+.pf-modal-overlay.pf-note {
+  background: radial-gradient(ellipse at 50% 44%, rgba(8, 8, 10, 0.5) 0%, rgba(2, 2, 3, 0.93) 78%);
+  -webkit-backdrop-filter: blur(2px) brightness(0.85);
+  backdrop-filter: blur(2px) brightness(0.85);
+}
+.pf-note .pf-modal {
+  position: relative;
+  width: min(360px, 84vw);
+  max-height: 86vh;
+  padding: 30px 28px 36px;
+  border: 0;
+  border-radius: 2px;
+  overflow: visible;
+  color: #17130d;
+  font-family: 'Marker Felt', 'Chalkboard SE', 'Chalkboard', 'Bradley Hand', 'Segoe Print', cursive;
+  /* semi-transparent aged paper: translucent cream + ruled lines + red margin + grime */
+  background-color: rgba(226, 220, 201, 0.85);
+  background-image:
+    repeating-linear-gradient(180deg, transparent 0 26px, rgba(38, 58, 92, 0.16) 26px 27px),
+    linear-gradient(90deg, transparent 0 32px, rgba(150, 46, 46, 0.26) 32px 33px, transparent 33px),
+    radial-gradient(circle at 10% 6%, rgba(96, 74, 42, 0.4), transparent 30%),
+    radial-gradient(circle at 92% 95%, rgba(74, 56, 34, 0.45), transparent 34%),
+    radial-gradient(circle at 96% 12%, rgba(60, 44, 28, 0.32), transparent 26%);
+  background-blend-mode: multiply;
+  /* drop-shadow (not box-shadow) so the shadow follows the TORN silhouette, not a rect */
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.7)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.55));
+  -webkit-clip-path: polygon(0% 3%, 8% 0%, 17% 4%, 27% 1%, 38% 5%, 50% 1%, 61% 4%, 72% 0%, 83% 4%, 93% 1%, 100% 4%, 98% 30%, 100% 55%, 98% 80%, 100% 97%, 91% 100%, 80% 96%, 68% 99%, 56% 95%, 44% 99%, 32% 96%, 21% 100%, 10% 96%, 0% 99%, 2% 75%, 0% 50%, 2% 25%);
+  clip-path: polygon(0% 3%, 8% 0%, 17% 4%, 27% 1%, 38% 5%, 50% 1%, 61% 4%, 72% 0%, 83% 4%, 93% 1%, 100% 4%, 98% 30%, 100% 55%, 98% 80%, 100% 97%, 91% 100%, 80% 96%, 68% 99%, 56% 95%, 44% 99%, 32% 96%, 21% 100%, 10% 96%, 0% 99%, 2% 75%, 0% 50%, 2% 25%);
+  animation: pf-note-in 0.42s cubic-bezier(.2, .7, .3, 1) both;
+}
+@keyframes pf-note-in {
+  from { transform: rotate(-2.4deg) translateY(-18px) scale(0.94); opacity: 0; }
+  to   { transform: rotate(-2.4deg) translateY(0) scale(1); opacity: 1; }
+}
+/* edge-darkening vignette + paper grain over the note (clipped to the torn shape) */
+.pf-note .pf-modal::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  -webkit-clip-path: inherit; clip-path: inherit;
+  background:
+    radial-gradient(ellipse at 50% 48%, transparent 52%, rgba(22, 12, 6, 0.5) 100%),
+    repeating-linear-gradient(116deg, rgba(0, 0, 0, 0.035) 0 2px, transparent 2px 6px);
+  mix-blend-mode: multiply;
+}
+/* header → scrawled title, no chrome */
+.pf-note .pf-modal__head { display: block; padding: 0; margin: 0 0 16px; background: none; border: 0; }
+.pf-note .pf-modal__title {
+  display: block; color: #14110b; font-family: inherit; font-weight: 700;
+  font-size: 30px; line-height: 1.04; letter-spacing: 1.5px; text-transform: uppercase;
+  transform: rotate(-1.2deg);
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.45), 1px 1px 0 rgba(18, 12, 8, 0.28);
+  border-bottom: 3px solid rgba(20, 14, 9, 0.55); padding-bottom: 6px;
+}
+/* close = a faint pencil ✕ in the torn corner */
+.pf-note .pf-modal__close {
+  position: absolute; top: 10px; right: 16px; z-index: 2;
+  color: rgba(28, 20, 12, 0.45); font-family: inherit; font-size: 22px;
+  transform: rotate(6deg); transition: color .2s;
+}
+.pf-note .pf-modal__close:hover { color: rgba(28, 20, 12, 0.85); }
+/* body text → charcoal ink, lines slightly askew */
+.pf-note .pf-modal__body { padding: 0; gap: 12px; position: relative; z-index: 1; }
+.pf-note .pf-modal__body .pf-text { font-family: inherit; color: #221c13; }
+.pf-note .pf-modal__body .pf-text--title { color: #161009; font-size: 23px; letter-spacing: 0.5px; transform: rotate(0.6deg); text-shadow: 0 0 1px rgba(0, 0, 0, 0.35); }
+.pf-note .pf-modal__body .pf-text--muted { color: #2c2418; font-size: 15px; line-height: 1.55; transform: rotate(-0.5deg); }
+
+/* ── Hidden notes (scrunched paper on the world stage) ───────────────────────── */
+/* the layer is click-through except the papers themselves (like hotspots) */
+.pf-notes--world { position: absolute; inset: 0; pointer-events: none; }
+.pf-notes--world > * { pointer-events: auto; }
+/* a near-invisible crumpled note (idle ~2% opacity, brightens on hover). The crease
+   look is faked with overlapping gradients; the torn outline with a clip-path. Uses
+   individual translate/rotate (not transform) — cleaner on WebKit. */
+.pf-note-paper {
+  position: absolute;
+  width: var(--note-w, 120px); height: var(--note-h, 120px);
+  translate: -50% -50%;
+  rotate: var(--note-rot, 0deg);
+  opacity: var(--note-idle, 0.02);
+  transition: opacity 0.5s ease;
+  cursor: pointer;
+  background-color: #d9d4c4;
+  background-image:
+    radial-gradient(ellipse 58% 42% at 32% 26%, rgba(255, 255, 255, 0.92), transparent 62%),
+    radial-gradient(ellipse 52% 60% at 72% 72%, rgba(120, 116, 104, 0.55), transparent 60%),
+    linear-gradient(125deg, transparent 37%, rgba(90, 86, 76, 0.5) 40%, transparent 43%),
+    linear-gradient(62deg, transparent 54%, rgba(80, 76, 68, 0.45) 57%, transparent 60%),
+    linear-gradient(200deg, transparent 29%, rgba(70, 66, 58, 0.42) 32%, transparent 35%);
+  background-blend-mode: multiply;
+  -webkit-clip-path: polygon(8% 4%, 26% 0, 44% 6%, 62% 1%, 82% 5%, 100% 14%, 95% 34%, 100% 56%, 94% 76%, 99% 95%, 78% 100%, 58% 95%, 40% 100%, 20% 96%, 3% 99%, 0 78%, 5% 56%, 0 34%, 4% 16%);
+  clip-path: polygon(8% 4%, 26% 0, 44% 6%, 62% 1%, 82% 5%, 100% 14%, 95% 34%, 100% 56%, 94% 76%, 99% 95%, 78% 100%, 58% 95%, 40% 100%, 20% 96%, 3% 99%, 0 78%, 5% 56%, 0 34%, 4% 16%);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+.pf-note-paper:hover,
+.pf-note-paper:focus-visible { opacity: var(--note-hover, 0.10); outline: none; }
+.pf-note-paper.is-found { opacity: var(--note-found, 0.05); }
+.pf-note-paper.is-found:hover { opacity: calc(var(--note-hover, 0.10) + 0.02); }
+
+/* found / left counter — faint, blood-tinted, drifts to a pulsing red when complete */
+.pf-notes-counter {
+  position: fixed; top: 16px; left: 50%; translate: -50% 0; z-index: 50;
+  font-family: 'Marker Felt', 'Chalkboard SE', 'Bradley Hand', monospace;
+  font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(202, 198, 190, 0.5); text-shadow: 0 0 7px rgba(0, 0, 0, 0.9);
+  pointer-events: none; user-select: none;
+}
+.pf-notes-counter.is-complete { color: rgba(190, 42, 42, 0.9); animation: pf-notes-pulse 1.7s ease-in-out infinite; }
+@keyframes pf-notes-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* ── wallet-submit form (lives inside the .pf-note "claim" modal) ─────────────── */
+.pf-wallet-submit { display: flex; flex-direction: column; gap: 12px; }
+.pf-wallet-submit__input {
+  width: 100%; box-sizing: border-box; padding: 10px 12px;
+  background: rgba(20, 16, 12, 0.06); border: 0; border-bottom: 2px solid rgba(20, 14, 9, 0.55);
+  color: #17130d; font-family: inherit; font-size: 18px; letter-spacing: 0.5px;
+}
+.pf-wallet-submit__input::placeholder { color: rgba(40, 32, 22, 0.45); }
+.pf-wallet-submit__input:focus { outline: none; border-bottom-color: rgba(150, 46, 46, 0.85); }
+.pf-wallet-submit__input:disabled { opacity: 0.7; }
+.pf-wallet-submit__btn {
+  align-self: flex-start; padding: 9px 18px; cursor: pointer;
+  background: rgba(20, 14, 9, 0.82); color: #e2dcc9; border: 0; border-radius: 2px;
+  font-family: inherit; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;
+  transition: background 0.2s, transform 0.1s;
+}
+.pf-wallet-submit__btn:hover { background: rgba(150, 46, 46, 0.92); }
+.pf-wallet-submit__btn:active { transform: translateY(1px); }
+.pf-wallet-submit__btn:disabled { opacity: 0.6; cursor: default; }
+.pf-wallet-submit__status { font-size: 14px; min-height: 1.2em; color: #2c2418; transform: rotate(-0.4deg); }
+.pf-wallet-submit__status.is-ok { color: #3d5a2a; }
+.pf-wallet-submit__status.is-error { color: #962e2e; }
+
+/* ── admin-wallets (EscapeNotes paginated reader) ────────────────────────────── */
+.pf-admin { display: flex; flex-direction: column; gap: 14px; min-width: min(680px, 92vw); }
+.pf-admin__head { border-bottom: 1px solid var(--pf-border); padding-bottom: 8px; }
+.pf-admin__title { font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--pf-accent); font-size: 14px; }
+.pf-admin__controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pf-admin__page { font-size: 12px; color: var(--pf-muted); letter-spacing: 1px; margin-left: auto; }
+.pf-admin__btn {
+  padding: 8px 14px; cursor: pointer; border: 1px solid var(--pf-border);
+  background: var(--pf-bg-2); color: var(--pf-text); font: inherit; font-size: 13px;
+  letter-spacing: 1px; text-transform: uppercase; transition: border-color .2s, color .2s;
+}
+.pf-admin__btn:hover:not(:disabled) { border-color: var(--pf-accent); color: var(--pf-accent); }
+.pf-admin__btn:disabled { opacity: 0.4; cursor: default; }
+.pf-admin__btn--ghost { background: transparent; }
+.pf-admin__status { font-size: 13px; color: var(--pf-muted); min-height: 1.2em; }
+.pf-admin__status.is-ok { color: var(--pf-accent); }
+.pf-admin__status.is-error { color: #e0564e; }
+.pf-admin__list { display: flex; flex-direction: column; gap: 4px; }
+.pf-admin__row {
+  display: grid; grid-template-columns: 52px 1fr auto; gap: 10px; align-items: center;
+  padding: 8px 10px; background: var(--pf-bg-2); border: 1px solid var(--pf-border);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 13px;
+}
+.pf-admin__idx { color: var(--pf-muted); }
+.pf-admin__addr { color: var(--pf-text); overflow-wrap: anywhere; }
+.pf-admin__time { color: var(--pf-muted); font-size: 11px; white-space: nowrap; }
+.pf-admin__empty { color: var(--pf-muted); font-style: italic; padding: 10px; }
+
+/* ── link (plain anchor; optional pixel font) ───────────────────────────────── */
+.pf-link { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: inherit; cursor: pointer; }
+.pf-link:hover { text-decoration: underline; }
+.pf-link:not([href]) { cursor: default; }
+.pf-link:not([href]):hover { text-decoration: none; }
+.pf-link__icon { width: 16px; height: 16px; image-rendering: pixelated; display: block; }
+.pf-link--pixel { font-family: var(--pf-font); letter-spacing: 1px; }
+/* redacted blocks — solid black, slightly spaced so they read as distinct squares */
+.pf-link__redact { color: #000; letter-spacing: 2px; }
+
+/* "find out more on X" footer on the torn claim note — pixel-font credit, dark note
+   ink, reddens on hover. The pixel letters deliberately contrast the handwritten note. */
+.pf-note-x {
+  display: block; text-align: center; margin-top: 18px;   /* block → children flow as inline TEXT, not flex items */
+  font-size: 12px; line-height: 1.5;
+  color: #2c2418; opacity: 0.9; text-transform: uppercase; letter-spacing: 1.5px;
+  text-decoration: none;
+}
+.pf-note-x:hover { color: #962e2e; text-decoration: none; }
+.pf-note-x .pf-link__redact { white-space: nowrap; }      /* blocks + the @Asy never split across lines */
+
+/* ── Tooltip ───────────────────────────────────────────────────────────────── */
+.pf-tooltip { position: relative; display: inline-flex; }
+.pf-tooltip__trigger {
+  cursor: help;
+  border-bottom: 1px dotted var(--pf-muted);
+  outline: none;
+}
+.pf-tooltip__bubble {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  bottom: calc(100% + 6px);
+  min-width: 140px;
+  max-width: 240px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--pf-text);
+  background: var(--pf-surface-3);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 2px 2px 0 var(--pf-shadow-color);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 50;
+}
+.pf-tooltip__bubble--bottom { bottom: auto; top: calc(100% + 6px); }
+.pf-tooltip:hover .pf-tooltip__bubble,
+.pf-tooltip__trigger:focus + .pf-tooltip__bubble {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Topbar actions: social + wallet button ────────────────────────────────── */
+.pf-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+[data-region="wallet-button"] {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Re-skin proofwallet's own connect button to our beveled pixel style ──────
+   The library injects its <style> at runtime; we win the cascade with the
+   higher-specificity [data-region] prefix (no !important needed). */
+[data-region="wallet-button"] .cc-header-container { gap: 0; }
+
+[data-region="wallet-button"] .cc-header-btn,
+[data-region="wallet-button"] .cc-header-btn.connected {
+  font-family: var(--pf-font);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--pf-primary-ink);
+  background: linear-gradient(180deg, var(--pf-primary-2) 0 50%, var(--pf-primary) 50% 100%);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 7px 12px;
+  height: 38px;
+}
+[data-region="wallet-button"] .cc-header-btn:hover {
+  filter: brightness(1.06);
+  box-shadow: none;
+}
+[data-region="wallet-button"] .cc-header-btn:active {
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  transform: translate(1px, 1px);
+}
+/* connected = parchment "ghost" variant */
+[data-region="wallet-button"] .cc-header-btn.connected {
+  background: linear-gradient(180deg, var(--pf-surface), var(--pf-surface-2));
+  color: var(--pf-text);
+}
+[data-region="wallet-button"] .cc-header-btn-address {
+  font-family: var(--pf-mono);
+  font-size: 14px;
+  color: var(--pf-text);
+}
+[data-region="wallet-button"] .cc-header-btn-dot {
+  background: var(--pf-grass);
+  border-radius: 0;
+}
+
+/* match the social plate height to the button so the cluster aligns */
+.pf-social {
+  height: 38px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+/* Twitter icon — keep pixels crisp, lift on hover */
+.pf-social {
+  display: inline-flex;
+  padding: 4px;
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  background: var(--pf-surface);
+  line-height: 0;
+}
+.pf-social:active {
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+  transform: translate(1px, 1px);
+}
+.pf-social__icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated; /* no blur when scaling the pixel-art PNG */
+}
+.pf-social:hover .pf-social__icon {
+  filter: brightness(1.1);
+}
+
+/* ── Pixel-art: chamfered ("notched") corners on small interactive elements ─────
+   We notch only the small, SHADOW-LESS elements — clip-path would clip a
+   box-shadow, and `filter: drop-shadow` on a container darkens its inner text
+   (the "harsh shadow on button text" bug). Big panels keep their rectangular hard
+   drop-shadow; the flat 2-tone fills + bevels carry the pixel look there. */
+.pf-btn, .pf-tab, .pf-badge, .pf-input, .pf-select, .pf-iconsel__tile,
+[data-region="wallet-button"] .cc-header-btn {
+  clip-path: var(--pf-notch);
+  border-radius: 0;
+}
+
+/* ── Responsive / mobile auto-layout ───────────────────────────────────────── */
+/* wide tables scroll instead of overflowing the viewport */
+.pf-table-wrap { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 640px) {
+  .pf-main { padding: 0 12px; margin: 12px auto 48px; gap: 10px; }
+  .pf-topbar { margin: 12px 12px 0; padding: 8px 10px; flex-wrap: wrap; gap: 8px; }
+  .pf-brand { font-size: 18px; gap: 8px; }
+  .pf-brand::before { width: 14px; height: 14px; }
+
+  /* hero: single column, centered, tighter */
+  .pf-hero { grid-template-columns: 1fr; text-align: center; justify-items: center; padding: 26px 16px; gap: 18px; }
+  .pf-hero__content { justify-items: center; }
+  .pf-hero__body { text-align: center; }
+  .pf-hero__title { font-size: clamp(28px, 9vw, 46px); }
+  .pf-hero__actions { justify-content: center; }
+  .pf-hero__art { min-height: 150px; }
+
+  /* tighten cards + rows */
+  .pf-card { padding: 12px; }
+  .pf-row { gap: 10px; }
+
+  /* tabs: tighter + horizontal scroll on mobile */
+  .pf-tab { font-size: 14px; padding: 6px 10px; }
+  .pf-tabs__panes { padding: 12px; }
+
+  /* full-width modal/portrait/feature-card on small screens */
+  .pf-modal { width: 100%; }
+  .pf-portrait, .pf-fcard { max-width: none; width: 100%; }
+
+  /* big arcade text shouldn't overflow */
+  .pf-slam__text { font-size: clamp(40px, 16vw, 96px); }
+}
+
+/* very small phones */
+@media (max-width: 380px) {
+  .pf-brand { font-size: 16px; }
+  .pf-hero__title { font-size: clamp(24px, 10vw, 38px); }
+  .pf-stat, .pf-counter { min-width: 96px; }
+}
+
+/* ── Overflow guard: let grid/flex children shrink below content width ──────────
+   Default min-width:auto on flex/grid items is THE cause of mobile horizontal
+   overflow (a <select>, long text, or wide child forces the track past the
+   viewport). Allowing them to shrink keeps everything inside the screen. */
+.pf-main > *, .pf-panel__body > *, .pf-tabs__pane > *, .pf-action > *,
+.pf-curtain__body > *, .pf-row > *, .pf-stage__content > * { min-width: 0; }
+.pf-select, .pf-input, .pf-table { max-width: 100%; }
+
+/* ── Scroll container (scrollable list/area) ───────────────────────────────── */
+.pf-scroll { overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.pf-scroll--frame {
+  background: var(--pf-surface-2); padding: 8px;
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+}
+.pf-scroll__inner { display: grid; gap: var(--pf-gap); }
+.pf-scroll::-webkit-scrollbar { width: 12px; }
+.pf-scroll::-webkit-scrollbar-track { background: var(--pf-bg-2); }
+.pf-scroll::-webkit-scrollbar-thumb {
+  background: var(--pf-primary); border: 3px solid var(--pf-bg-2);
+}
+.pf-scroll::-webkit-scrollbar-thumb:hover { background: var(--pf-primary-2); }
+
+/* ── Marketplace ───────────────────────────────────────────────────────────── */
+.pf-market {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--pf-market-min, 170px), 1fr));
+  gap: 12px;
+}
+.pf-market__item {
+  font: inherit; text-align: left; cursor: pointer; padding: 8px; display: grid; gap: 6px;
+  color: var(--pf-text); background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: var(--pf-shadow);
+  transition: transform var(--pf-dur-fast) var(--pf-ease-out), filter var(--pf-dur-fast) var(--pf-ease-out);
+}
+.pf-market__item:hover { transform: translateY(-3px); filter: brightness(1.06); }
+.pf-market__item:active { transform: translateY(0); }
+.pf-market__media {
+  aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  background: linear-gradient(160deg, var(--pf-surface-2), var(--pf-bg-2));
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark);
+}
+.pf-market__media--emoji { font-size: 44px; }
+.pf-market__media--ph { background: linear-gradient(135deg, var(--pf-primary-2), var(--pf-primary)); }
+.pf-market__media--lg { aspect-ratio: 16/10; max-height: 220px; }
+.pf-market__media--lg.pf-market__media--emoji { font-size: 88px; }
+.pf-market__img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.pf-market__name {
+  font-size: 14px; font-weight: 700; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pf-market__price { font-size: 14px; font-weight: 700; color: var(--pf-accent); font-variant-numeric: tabular-nums; }
+.pf-market__detail-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px;
+}
+
+/* ── inventory / chest / drag (Minecraft-style slot UI) ─────────────────────── */
+/* Intentionally NOT themed — the slate-gray bevels are iconic. Pixel font + hard
+   2px bevels (light top-left / dark bottom-right) read as the classic GUI. */
+.pf-inv {
+  background: #c6c6c6;
+  padding: 10px;
+  display: inline-flex; flex-direction: column; gap: 6px;
+  box-shadow: inset 3px 3px 0 #fefefe, inset -3px -3px 0 #555, 0 10px 30px rgba(0,0,0,0.45);
+  border: 4px solid #2b2b2b;
+  font-family: var(--pf-font);
+  image-rendering: pixelated;
+}
+.pf-inv__title {
+  color: #404040; font-size: 14px; letter-spacing: 1px; text-transform: none;
+  padding: 2px 2px 4px; text-shadow: 1px 1px 0 #e9e9e9;
+}
+.pf-inv__grid {
+  display: grid; grid-template-columns: repeat(var(--inv-cols, 9), 40px); gap: 2px;
+}
+.pf-slot {
+  width: 40px; height: 40px; background: #8b8b8b;
+  box-shadow: inset 2px 2px 0 #373737, inset -2px -2px 0 #ffffff;
+  position: relative;
+}
+.pf-item {
+  position: absolute; inset: 2px; display: grid; place-items: center;
+  cursor: grab; touch-action: none; user-select: none;
+  font-size: 26px; line-height: 1;
+}
+.pf-item:hover { background: rgba(255,255,255,0.45); }
+.pf-item:focus-visible { outline: 2px solid #fffb96; outline-offset: -2px; }
+.pf-item.is-dragging { opacity: 0.35; } /* drop hit-testing transparency handled in _drag.js (WebKit pointer-capture safe) */
+.pf-item__emoji { filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.35)); pointer-events: none; }
+.pf-item__img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.35)); }
+.pf-item__count {
+  position: absolute; right: -1px; bottom: -4px;
+  font-family: var(--pf-font); font-size: 15px; color: #fff;
+  text-shadow: 2px 2px 0 #3f3f3f; pointer-events: none;
+}
+
+/* the floating ghost that follows the cursor mid-drag. Positioned + moved via
+   `transform` (NOT left/top) and promoted with will-change, so WebKit composites
+   it on its own layer — moving a fixed element with a `filter` via left/top leaves
+   repaint TRAILS ("ghost marks") over the canvas/scene. JS sets the transform. */
+.pf-drag-ghost {
+  position: fixed; left: 0; top: 0; z-index: 1200; pointer-events: none;
+  font-size: 30px; line-height: 1; will-change: transform;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.5));
+}
+.pf-drag-ghost .pf-item__img, .pf-drag-ghost .pf-item__emoji { width: 34px; height: 34px; }
+
+/* Minecraft item info tooltip — must sit ABOVE everything (boot 1000, ghost 1200,
+   chest dialog 950, any overlay), so use a near-max z. */
+.pf-itemtip {
+  position: fixed; z-index: 2147483000; pointer-events: none;
+  max-width: 280px; padding: 6px 9px;
+  background: rgba(16, 0, 16, 0.92);
+  border: 2px solid #2a0e63; box-shadow: 0 0 0 1px #150733, 0 6px 18px rgba(0,0,0,0.5);
+  font-family: var(--pf-font); line-height: 1.5;
+}
+.pf-itemtip__name { color: #ffffff; font-size: 14px; }
+.pf-itemtip__name--rare { color: #5a7bff; }
+.pf-itemtip__name--epic { color: #c95bff; }
+.pf-itemtip__name--legendary { color: #ffb13d; }
+.pf-itemtip__desc { color: #b9b9c4; font-size: 12px; margin-top: 3px; }
+
+/* the canvas STAGE: a uniform world (size set by JS) cover-scaled to the viewport
+   via a single transform (_canvas.js) so dropped items scale as one unit. */
+.pf-canvas-spawns { position: fixed; left: 0; top: 0; z-index: 945; pointer-events: none; transform-origin: 0 0; }
+/* position + scale are driven via `transform` in _canvas.js (NOT left/top) so a
+   moving drop-shadow doesn't leave WebKit repaint trails. will-change promotes a
+   compositor layer; .is-dragging kills the transition so the drag follows instantly. */
+.pf-spawned {
+  position: absolute; left: 0; top: 0; pointer-events: auto;
+  cursor: grab; touch-action: none; user-select: none;
+  font-size: 48px; line-height: 1; will-change: transform;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.45));
+  transition: transform 0.18s var(--pf-ease-out), opacity 0.18s ease;
+  opacity: 0;
+}
+.pf-spawned.is-dragging { cursor: grabbing; z-index: 2; transition: none; }
+.pf-spawned__img { width: 64px; height: 64px; object-fit: contain; pointer-events: none; }
+.pf-spawned__emoji { pointer-events: none; }
+
+/* chest marker on the canvas */
+.pf-chest-layer { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+.pf-chest-layer .pf-chest { pointer-events: auto; }
+.pf-chest {
+  --chest-size: 84px;
+  appearance: none; background: transparent; border: 0; cursor: pointer;
+  font-size: var(--chest-size); line-height: 1; padding: 0;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.5));
+  transition: scale 0.15s var(--pf-ease-out), filter 0.15s ease;
+}
+.pf-chest:hover { scale: 1.08; filter: drop-shadow(0 0 14px rgba(255,225,120,0.7)) drop-shadow(0 6px 6px rgba(0,0,0,0.5)); }
+.pf-chest:active { scale: 0.96; }
+.pf-chest.is-open { scale: 1.04; }
+.pf-chest__img { width: var(--chest-size); height: var(--chest-size); object-fit: contain; }
+.pf-chest__label {
+  font-family: var(--pf-font); font-size: 13px; color: #fff;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.6); white-space: nowrap;
+}
+
+/* chest overlay: a non-stacking wrapper so the scrim (940) sits BELOW dropped
+   items (945) while the dialog (950) sits ABOVE them — items read as "on the
+   canvas, around the chest". */
+.pf-chest-overlay { position: fixed; inset: 0; display: grid; place-items: center; }
+.pf-chest-overlay::before {
+  content: ''; position: fixed; inset: 0; z-index: 940;
+  background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.pf-chest-overlay.is-in::before { opacity: 1; }
+.pf-chest-dialog {
+  position: relative; z-index: 950;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; translate: 0 10px; scale: 0.98;
+  transition: opacity 0.2s var(--pf-ease-out), translate 0.2s var(--pf-ease-out), scale 0.2s var(--pf-ease-out);
+}
+.pf-chest-overlay.is-in .pf-chest-dialog { opacity: 1; translate: 0 0; scale: 1; }
+.pf-chest-dialog__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  width: 100%; color: #fff; font-family: var(--pf-font);
+}
+.pf-chest-dialog__title { font-size: 18px; text-shadow: 2px 2px 0 rgba(0,0,0,0.6); }
+.pf-chest-dialog__close {
+  appearance: none; background: #8b8b8b; color: #fff; cursor: pointer;
+  width: 28px; height: 28px; font-size: 14px; font-family: var(--pf-font);
+  box-shadow: inset 2px 2px 0 #ffffff, inset -2px -2px 0 #373737;
+}
+.pf-chest-dialog__close:hover { background: #a0a0a0; }
+.pf-chest-dialog__close:active { box-shadow: inset 2px 2px 0 #373737, inset -2px -2px 0 #ffffff; }
+.pf-chest-dialog__hint { color: #d8d8d8; font-family: var(--pf-font); font-size: 11px; text-shadow: 1px 1px 0 rgba(0,0,0,0.6); opacity: 0.9; }
+
+.pf-draggable__inner { display: inline-flex; }
+
+/* ── spline (curved path motion) ───────────────────────────────────────────── */
+.pf-spline { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+.pf-spline--world { position: absolute; inset: 0; z-index: auto; } /* fills the cover-scaled stage */
+.pf-spline__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pf-spline__traveller {
+  position: absolute; left: 0; top: 0; translate: -50% -50%;
+  will-change: left, top, rotate; line-height: 1;
+}
+
+.pf-sprite { display: block; }
+
+/* ── parallax (multi-layer depth) ───────────────────────────────────────────── */
+.pf-parallax { will-change: transform; }
+.pf-parallax__media { will-change: transform; transform-origin: center; }
+.pf-parallax__obj { will-change: transform; line-height: 1; }
+
+/* ── grid (data / select / roll) ────────────────────────────────────────────── */
+.pf-grid {
+  display: grid; grid-template-columns: repeat(var(--grid-cols, 5), minmax(0, 1fr));
+  gap: 12px; width: 100%;
+}
+.pf-gridcell {
+  position: relative; aspect-ratio: 1; border-radius: 10px;
+  background: #14161c; border: 1px solid #262a33; color: #e8eaf0;
+  overflow: hidden; transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s var(--pf-ease-out), box-shadow 0.15s ease, opacity 0.28s ease;
+}
+.pf-gridcell[role="button"] { cursor: pointer; }
+.pf-gridcell[role="button"]:hover { border-color: #3a4150; background: #181b22; }
+.pf-gridcell:focus-visible { outline: 2px solid var(--pf-accent); outline-offset: 2px; }
+/* selected (highlight) */
+.pf-gridcell.is-selected { background: #1c2740; border-color: var(--pf-accent); box-shadow: inset 0 0 0 1px var(--pf-accent), 0 0 14px color-mix(in srgb, var(--pf-accent) 45%, transparent); }
+/* roll/sweep spotlight */
+.pf-gridcell.is-active { background: color-mix(in srgb, var(--pf-accent) 40%, #14161c); border-color: #fff; transform: scale(1.06); box-shadow: 0 0 20px color-mix(in srgb, var(--pf-accent) 70%, transparent); z-index: 1; }
+/* eliminated during a roll — dimmed to 20% (winner is never dimmed) */
+.pf-gridcell.is-dimmed { opacity: 0.2; }
+/* the landed winner — a little pop on arrival */
+.pf-gridcell.is-landed { background: #233a2a; border-color: #5fd081; box-shadow: inset 0 0 0 2px #5fd081, 0 0 22px rgba(95,208,129,0.5); z-index: 1; animation: pf-grid-land 0.42s var(--pf-ease-out) both; }
+@keyframes pf-grid-land { 0% { transform: scale(1.22); } 55% { transform: scale(0.96); } 100% { transform: scale(1); } }
+/* content + corner labels */
+.pf-gridcell__content { position: absolute; inset: 0; display: grid; place-items: center; }
+.pf-gridcell__img { width: 64%; height: 64%; object-fit: contain; }
+.pf-gridcell__icon { font-size: clamp(20px, 4vw, 40px); line-height: 1; }
+.pf-gridcell__tl, .pf-gridcell__tr, .pf-gridcell__bl, .pf-gridcell__br {
+  position: absolute; font-family: var(--pf-mono, monospace); font-size: 12px; font-variant-numeric: tabular-nums; line-height: 1;
+}
+.pf-gridcell__tl { top: 8px; left: 9px; color: #6b7180; }
+.pf-gridcell__tr { top: 8px; right: 9px; color: #9aa1b0; }
+.pf-gridcell__bl { bottom: 8px; left: 9px; color: #9aa1b0; }
+.pf-gridcell__br { bottom: 8px; right: 9px; color: #fff; font-weight: 600; }
+
+/* ── tactics: turn-based battle board (components/tactics.js) ─────────────────── */
+.pf-tac {
+  position: relative; display: grid; grid-template-columns: repeat(var(--tac-cols, 7), 1fr);
+  gap: 2px; width: 100%; max-width: 560px; margin: 0 auto; padding: 6px;
+  background: rgba(10, 14, 20, 0.5); border: 1px solid #2b3240; border-radius: 12px;
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+}
+.pf-tac-cell {
+  aspect-ratio: 1; border-radius: 4px; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.pf-tac-cell.is-light { background: #223047; }
+.pf-tac-cell.is-dark { background: #1a2435; }
+.pf-tac-cell:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); }
+.pf-tac-cell.is-move { background: #1f4a2e; box-shadow: inset 0 0 0 2px #3fae63, 0 0 10px rgba(63, 174, 99, 0.35); }
+.pf-tac-cell.is-attack { background: #5a2226; box-shadow: inset 0 0 0 2px #e0533d, 0 0 12px rgba(224, 83, 61, 0.5); animation: pf-tac-pulse 1s ease-in-out infinite; }
+.pf-tac-cell.is-sel { box-shadow: inset 0 0 0 2px var(--pf-accent, #f6a821), 0 0 12px color-mix(in srgb, var(--pf-accent, #f6a821) 55%, transparent); }
+@keyframes pf-tac-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.4); } }
+
+/* unit overlay — passes clicks through the gaps to the cells beneath */
+.pf-tac-units { position: absolute; inset: 6px; pointer-events: none; }
+.pf-tac-unit {
+  position: absolute; width: calc(100% / var(--tac-cols, 7)); aspect-ratio: 1;
+  transform: translate(-50%, -50%); display: grid; place-items: center;
+  pointer-events: auto; cursor: pointer;
+}
+.pf-tac-unit__spr { width: 122%; display: grid; place-items: center; transition: transform 0.12s ease, filter 0.18s ease; }
+.pf-tac-unit.is-left .pf-tac-unit__spr { transform: scaleX(-1); }
+.pf-tac-unit.is-hit .pf-tac-unit__spr { animation: pf-tac-hit 0.36s ease; }
+.pf-tac-unit.is-left.is-hit .pf-tac-unit__spr { animation: pf-tac-hit-l 0.36s ease; }
+@keyframes pf-tac-hit { 0% { filter: brightness(2.4) saturate(0.4); } 100% { filter: none; } }
+@keyframes pf-tac-hit-l { 0% { filter: brightness(2.4) saturate(0.4); transform: scaleX(-1); } 100% { filter: none; transform: scaleX(-1); } }
+.pf-tac-unit.is-dead { transition: opacity 0.4s ease, transform 0.4s ease; opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(12deg); }
+
+/* tiny hp bar above each unit */
+.pf-tac-hp { position: absolute; top: 2%; left: 12%; width: 76%; height: 5px; background: rgba(0, 0, 0, 0.55); border-radius: 3px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.pf-tac-hp__fill { display: block; height: 100%; width: 100%; background: #5fd081; transition: width 0.25s ease, background 0.25s ease; }
+
+/* floating damage number */
+.pf-tac-dmg { position: absolute; top: 0; left: 50%; color: #ff6a5a; font-family: var(--pf-mono, monospace); font-weight: 800; font-size: clamp(13px, 2.4vw, 20px); text-shadow: 0 1px 2px #000, 0 0 6px rgba(224, 83, 61, 0.6); pointer-events: none; animation: pf-tac-dmg 0.72s ease-out forwards; }
+@keyframes pf-tac-dmg { 0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -30px) scale(1.15); } }
+
+/* ── postprocess: full-screen screen effects / VHS-CRT overlay (components/postprocess.js) ── */
+.pf-pp { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+/* fullscreen FX locks page scroll so the scrollbar gutter can't leave a gap */
+html.pf-pp-lock, html.pf-pp-lock body { overflow: hidden; }
+.pf-pp__layer { position: absolute; inset: 0; }
+/* scanlines (multiply into the page) */
+.pf-pp__scan { background: repeating-linear-gradient(0deg, rgba(0,0,0,var(--pp-scan-op,0.12)) 0, rgba(0,0,0,var(--pp-scan-op,0.12)) 1px, transparent 1px, transparent var(--pp-scan-gap,3px)); mix-blend-mode: multiply; }
+.pf-pp__scan.is-roll { animation: pf-pp-scanroll 9s linear infinite; }
+@keyframes pf-pp-scanroll { from { background-position-y: 0; } to { background-position-y: 120px; } }
+/* film/VHS grain (overlay) — oversized so the jitter never reveals an edge */
+.pf-pp__grain { inset: -12%; background-repeat: repeat; background-size: 160px 160px; mix-blend-mode: overlay; opacity: 0.14; animation: pf-pp-grain 0.7s steps(5) infinite; }
+@keyframes pf-pp-grain { 0% { transform: translate(0,0); } 20% { transform: translate(-4%,3%); } 40% { transform: translate(3%,-4%); } 60% { transform: translate(-3%,-2%); } 80% { transform: translate(4%,2%); } 100% { transform: translate(0,0); } }
+/* color tint wash (blend set inline) */
+.pf-pp__tint { mix-blend-mode: multiply; }
+/* vignette (multiply darkens edges) */
+.pf-pp__vig { background: radial-gradient(125% 125% at 50% 50%, transparent 52%, rgba(0,0,0,var(--pp-vig,0.5)) 100%); mix-blend-mode: multiply; }
+/* CRT curve: rounded bezel + corner darkening + screen glare */
+/* CRT curve = a rounded-rect MASK: the corner notches are filled BLACK so content
+   can't peek past the curved screen (the big outer box-shadow fills everything
+   outside the rounded box; .pf-pp's overflow:hidden clips it to the corners), plus
+   a thin inner bezel ring + a tube vignette. NOTE: the radius/mask lives on this
+   LAYER, never on .pf-pp itself (rounding .pf-pp clipped the overlay → corner bleed). */
+.pf-pp__curve { border-radius: 6% / 9%; box-shadow: 0 0 0 100vmax #000, inset 0 0 0 4px #0a0b0e, inset 0 0 46px 12px rgba(0,0,0,0.5); }
+.pf-pp--scoped .pf-pp__curve { border-radius: 9% / 12%; box-shadow: 0 0 0 100vmax #000, inset 0 0 0 2px #0a0b0e, inset 0 0 22px 6px rgba(0,0,0,0.55); }
+.pf-pp__glare { background: radial-gradient(58% 42% at 30% 16%, rgba(255,255,255,0.12), transparent 62%); mix-blend-mode: screen; }
+/* chromatic fringe at the screen edges (screen blend) */
+.pf-pp__chroma { box-shadow: inset var(--pp-chroma,2px) 0 0 rgba(255,0,90,0.28), inset calc(-1 * var(--pp-chroma,2px)) 0 0 rgba(0,220,255,0.28); mix-blend-mode: screen; }
+/* brightness flicker */
+.pf-pp__flick { background: #fff; mix-blend-mode: overlay; opacity: 0; animation: pf-pp-flick 0.12s steps(2) infinite; }
+@keyframes pf-pp-flick { 0% { opacity: 0; } 50% { opacity: var(--pp-flick,0.05); } 100% { opacity: 0; } }
+/* VHS tracking bar that drifts down the screen */
+.pf-pp__track { inset: auto 0 auto 0; height: 22%; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.08) 38%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.08) 62%, transparent); mix-blend-mode: soft-light; filter: blur(1px); animation: pf-pp-track 7s linear infinite; }
+@keyframes pf-pp-track { from { transform: translateY(-130%); } to { transform: translateY(560%); } }
+/* glitch burst (toggled by JS) */
+.pf-pp.is-glitch .pf-pp__chroma { box-shadow: inset 7px 0 0 rgba(255,0,90,0.6), inset -7px 0 0 rgba(0,220,255,0.6); }
+.pf-pp.is-glitch .pf-pp__scan { transform: translateX(2.5%); }
+.pf-pp.is-glitch .pf-pp__track { opacity: 0.9; height: 34%; }
+/* VHS camcorder OSD (crisp, no blend) */
+.pf-pp__osd { position: absolute; inset: 0; font-family: var(--pf-font, monospace); color: #f4f4ec; letter-spacing: 1px; text-shadow: 0 2px 0 rgba(0,0,0,0.85), 0 0 10px rgba(255,255,255,0.25); }
+/* corner viewfinder brackets */
+.pf-pp__corners { position: absolute; inset: clamp(12px, 2.4vw, 28px); pointer-events: none; }
+.pf-pp__corner { position: absolute; width: clamp(22px, 4.2vw, 48px); height: clamp(22px, 4.2vw, 48px); border: 0 solid rgba(245,245,238,0.92); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.85)); }
+.pf-pp__corner.is-tl { top: 0; left: 0; border-top-width: 3px; border-left-width: 3px; }
+.pf-pp__corner.is-tr { top: 0; right: 0; border-top-width: 3px; border-right-width: 3px; }
+.pf-pp__corner.is-bl { bottom: 0; left: 0; border-bottom-width: 3px; border-left-width: 3px; }
+.pf-pp__corner.is-br { bottom: 0; right: 0; border-bottom-width: 3px; border-right-width: 3px; }
+/* top-left: ▶ PLAY / ● REC — chunky pixel text */
+.pf-pp__osd-tl { position: absolute; top: clamp(28px, 4.6vw, 54px); left: clamp(22px, 3.6vw, 44px); display: flex; flex-direction: column; gap: clamp(4px, 0.9vw, 10px); }
+.pf-pp__play, .pf-pp__rec { display: flex; align-items: center; gap: clamp(6px, 1vw, 11px); font-size: clamp(14px, 2.5vw, 28px); line-height: 1; }
+.pf-pp__dot { width: clamp(9px, 1.5vw, 16px); height: clamp(9px, 1.5vw, 16px); border-radius: 50%; background: #ff2e2e; box-shadow: 0 0 10px #ff2e2e; animation: pf-pp-rec 1s steps(1) infinite; }
+@keyframes pf-pp-rec { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.12; } }
+/* bottom-left: timecode + date — chunky */
+.pf-pp__osd-bl { position: absolute; bottom: clamp(18px, 3.2vw, 36px); left: clamp(22px, 3.6vw, 44px); display: flex; flex-direction: column; gap: clamp(2px, 0.6vw, 7px); font-size: clamp(14px, 2.5vw, 28px); line-height: 1.1; }
+.pf-pp__date { font-size: 0.82em; opacity: 0.94; }
+/* bottom-right: battery */
+.pf-pp__batt { position: absolute; bottom: clamp(20px, 3.4vw, 40px); right: clamp(24px, 3.8vw, 46px); display: flex; align-items: center; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.85)); }
+.pf-pp__batt-body { position: relative; width: clamp(26px, 4.4vw, 46px); height: clamp(13px, 2.2vw, 22px); border: 2px solid rgba(245,245,238,0.92); border-radius: 2px; }
+.pf-pp__batt-body::after { content: ''; position: absolute; inset: 2px; width: 28%; background: rgba(245,245,238,0.9); }
+.pf-pp__batt-tip { width: clamp(2px, 0.5vw, 4px); height: clamp(6px, 1.1vw, 11px); margin-left: 1px; background: rgba(245,245,238,0.92); border-radius: 0 2px 2px 0; }
+
+/* ── postprocess: extended FX (grade/bloom/dof, film/VHS damage, lens/light, framing, transitions) ── */
+/* backdrop-filter engine: real filtering of the content behind */
+.pf-pp__grade { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.pf-pp__bloom { -webkit-backdrop-filter: blur(7px) brightness(1.5) saturate(1.3); backdrop-filter: blur(7px) brightness(1.5) saturate(1.3); mix-blend-mode: screen; }
+.pf-pp__dof { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  -webkit-mask: linear-gradient(180deg, #000 0, #000 16%, transparent 34%, transparent 66%, #000 84%, #000 100%);
+  mask: linear-gradient(180deg, #000 0, #000 16%, transparent 34%, transparent 66%, #000 84%, #000 100%); }
+/* light & lens (screen blend) */
+.pf-pp__leaks { mix-blend-mode: screen; background:
+  radial-gradient(40% 60% at 8% 20%, rgba(255,120,40,0.5), transparent 60%),
+  radial-gradient(45% 55% at 95% 80%, rgba(255,40,140,0.4), transparent 62%); animation: pf-pp-leaks 11s ease-in-out infinite; }
+@keyframes pf-pp-leaks { 0%,100% { transform: translate(0,0); opacity: 0.8; } 50% { transform: translate(3%, -2%); opacity: 1; } }
+.pf-pp__flare { mix-blend-mode: screen; background:
+  radial-gradient(8% 8% at 72% 30%, rgba(255,255,240,0.85), transparent 70%),
+  radial-gradient(4% 4% at 60% 42%, rgba(120,200,255,0.5), transparent 70%),
+  radial-gradient(6% 6% at 50% 50%, rgba(255,180,120,0.4), transparent 70%),
+  radial-gradient(3% 3% at 38% 58%, rgba(160,255,200,0.45), transparent 70%),
+  linear-gradient(118deg, transparent 48%, rgba(255,255,255,0.10) 50%, transparent 52%); animation: pf-pp-flare 9s ease-in-out infinite alternate; }
+@keyframes pf-pp-flare { from { transform: translate(-2%, 1%); } to { transform: translate(2%, -1%); } }
+.pf-pp__ana { mix-blend-mode: screen; background: linear-gradient(180deg, transparent 46%, rgba(70,150,255,0.5) 50%, transparent 54%); filter: blur(1px); }
+/* film dust + scratches */
+.pf-pp__dust { mix-blend-mode: overlay; background:
+  linear-gradient(90deg, transparent 18%, rgba(255,255,255,0.5) 18.15%, transparent 18.3%),
+  linear-gradient(90deg, transparent 54%, rgba(0,0,0,0.45) 54.1%, transparent 54.2%),
+  linear-gradient(90deg, transparent 78%, rgba(255,255,255,0.4) 78.12%, transparent 78.24%);
+  animation: pf-pp-dust 0.5s steps(3) infinite; }
+@keyframes pf-pp-dust { 0% { transform: translateX(0); opacity: 0.5; } 33% { transform: translateX(6%); opacity: 0.9; } 66% { transform: translateX(-4%); opacity: 0.4; } 100% { transform: translateX(2%); opacity: 0.8; } }
+/* head-switching noise band (bottom of frame) */
+.pf-pp__headsw { top: auto; bottom: 0; height: 4.5%; background-repeat: repeat; background-size: 160px 160px; opacity: 0.5; mix-blend-mode: screen; transform: skewX(-9deg) scale(1.1); }
+/* dropout static bars (JS-spawned children) */
+.pf-pp__dropout-band { position: absolute; left: 0; right: 0; background-repeat: repeat; background-size: 160px 160px; opacity: 0.6; mix-blend-mode: screen; }
+/* letterbox cinematic bars */
+.pf-pp__lb { left: 0; right: 0; height: max(0px, calc((100vh - 100vw / var(--pp-lb, 2.39)) / 2)); background: #000; }
+.pf-pp__lb--top { top: 0; bottom: auto; } .pf-pp__lb--bot { bottom: 0; top: auto; }
+/* cue marks ("cigarette burns") — blinks top-right twice every cycle */
+.pf-pp__cue { left: auto; right: 5%; top: 7%; width: clamp(34px, 5vw, 56px); height: clamp(34px, 5vw, 56px); border-radius: 50%; background: radial-gradient(circle, rgba(255,250,230,0.9) 0, rgba(255,240,200,0.35) 55%, transparent 72%); mix-blend-mode: screen; opacity: 0; animation: pf-pp-cue 8s linear infinite; }
+@keyframes pf-pp-cue { 0%,92% { opacity: 0; } 93%,94.5% { opacity: 0.95; } 95%,96.5% { opacity: 0; } 97%,98.5% { opacity: 0.95; } 100% { opacity: 0; } }
+/* TV static (snow): tiny canvas of random noise, upscaled chunky → analog snow */
+.pf-pp__snow { width: 100%; height: 100%; display: none; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; image-rendering: crisp-edges; }
+/* color bars (test card / dead channel) */
+.pf-pp__bars { background: linear-gradient(90deg,
+  #c0c0c0 0 14.285%, #c0c000 14.285% 28.571%, #00c0c0 28.571% 42.857%, #00c000 42.857% 57.142%,
+  #c000c0 57.142% 71.428%, #c00000 71.428% 85.714%, #0000c0 85.714% 100%); }
+/* NO SIGNAL message overlay (the snow/bars sit behind it) */
+.pf-pp__signal { background: transparent; }
+.pf-pp__signal-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); padding: 10px 18px; background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.6); color: #fff; font-family: var(--pf-mono, monospace); font-weight: 800; letter-spacing: 3px; font-size: clamp(16px, 3vw, 30px); }
+/* channel-change zap */
+.pf-pp.is-zap .pf-pp__chroma { box-shadow: inset 8px 0 0 rgba(255,0,90,0.6), inset -8px 0 0 rgba(0,220,255,0.6); display: block !important; }
+.pf-pp.is-zap .pf-pp__flick { display: block !important; opacity: 0.5; }
+/* CRT power on / off */
+.pf-pp__power { position: absolute; inset: 0; background: #000; display: none; transform-origin: center; }
+.pf-pp__power.is-on { animation: pf-pp-pwr-on 0.72s ease-out forwards; }
+.pf-pp__power.is-off { animation: pf-pp-pwr-off 0.62s ease-in forwards; }
+@keyframes pf-pp-pwr-on { 0% { opacity: 1; clip-path: inset(49.6% 0 49.6% 0); background: #cfe; } 14% { opacity: 1; clip-path: inset(49.6% 0 49.6% 0); background: #eff; } 42% { opacity: 1; clip-path: inset(0 0 0 0); background: rgba(220,255,255,0.6); } 100% { opacity: 0; clip-path: inset(0 0 0 0); background: #000; } }
+@keyframes pf-pp-pwr-off { 0% { opacity: 0; clip-path: inset(0 0 0 0); background: #000; } 55% { opacity: 1; clip-path: inset(0 0 0 0); background: #000; } 78% { opacity: 1; clip-path: inset(49.4% 0 49.4% 0); background: #dff; } 100% { opacity: 1; clip-path: inset(49.9% 49% 49.9% 49%); background: #fff; } }
+/* iris wink — a transparent circular hole; a massive box-shadow fills the rest of
+   the screen black. The hole shrinks to a point (full black) then reopens. Built on
+   box-shadow + width/height (reliable in WebKit) NOT an animated mask (mask-size
+   animation is broken in Safari → the old "circle cut-out / black broken" bug).
+   Idle = display:none so a finished/interrupted iris never leaves a stuck overlay.
+   Default size is wide-open (no black) so showing it without animating shows nothing. */
+.pf-pp__iris {
+  position: absolute; top: 50%; left: 50%; width: 280vmax; height: 280vmax;
+  border-radius: 50%; transform: translate(-50%, -50%);
+  background: transparent; box-shadow: 0 0 0 100vmax #000; display: none;
+}
+.pf-pp__iris.is-wink { animation: pf-pp-iris 1.1s cubic-bezier(0.6, 0, 0.4, 1) forwards; }
+@keyframes pf-pp-iris {
+  0% { width: 280vmax; height: 280vmax; }
+  46%, 54% { width: 0; height: 0; }
+  100% { width: 280vmax; height: 280vmax; }
+}
+/* scoped to an element (a TV screen) instead of fullscreen */
+.pf-pp--scoped { position: absolute; }
+
+/* ── screen: a rectangle "TV/monitor" with content + a scoped post-process effect ── */
+.pf-screen { position: relative; display: block; overflow: hidden; background: #05070a; border-radius: 8px; container-type: inline-size; }
+/* scoped FX text scales to the BOX (container units) so a small TV reads right */
+.pf-pp--scoped .pf-pp__signal-msg { font-size: clamp(7px, 11cqw, 24px); padding: 0.35em 0.7em; letter-spacing: 2px; border-width: 1px; }
+.pf-pp--scoped .pf-pp__corners { inset: 5%; }
+.pf-pp--scoped .pf-pp__corner { width: clamp(10px, 14cqw, 40px); height: clamp(10px, 14cqw, 40px); border-width: 0; }
+.pf-pp--scoped .pf-pp__corner.is-tl { border-top-width: 2px; border-left-width: 2px; }
+.pf-pp--scoped .pf-pp__corner.is-tr { border-top-width: 2px; border-right-width: 2px; }
+.pf-pp--scoped .pf-pp__corner.is-bl { border-bottom-width: 2px; border-left-width: 2px; }
+.pf-pp--scoped .pf-pp__corner.is-br { border-bottom-width: 2px; border-right-width: 2px; }
+.pf-pp--scoped .pf-pp__osd-tl { top: 7%; left: 7%; gap: 2px; }
+.pf-pp--scoped .pf-pp__osd-bl { bottom: 7%; left: 7%; }
+.pf-pp--scoped .pf-pp__play, .pf-pp--scoped .pf-pp__rec, .pf-pp--scoped .pf-pp__osd-bl { font-size: clamp(7px, 7.5cqw, 18px); }
+.pf-pp--scoped .pf-pp__dot { width: clamp(5px, 4.5cqw, 12px); height: clamp(5px, 4.5cqw, 12px); }
+.pf-pp--scoped .pf-pp__batt { bottom: 7%; right: 7%; }
+.pf-pp--scoped .pf-pp__batt-body { width: clamp(16px, 16cqw, 40px); height: clamp(8px, 8cqw, 20px); }
+.pf-screen--bezel {
+  border: clamp(6px, 1.2vw, 12px) solid var(--screen-bezel, #14161b); border-radius: 12px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55), inset 0 0 0 2px #000, inset 0 0 26px rgba(0, 0, 0, 0.75);
+}
+.pf-screen__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pf-screen__content { position: absolute; inset: 0; display: grid; place-items: center; }
+.pf-screen__label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; padding: 4px 8px; font-family: var(--pf-mono, monospace); font-size: 11px; letter-spacing: 1px; color: #cdd3df; background: linear-gradient(0deg, rgba(0, 0, 0, 0.75), transparent); pointer-events: none; }
+
+/* ═══ Flash authoring layer ═══════════════════════════════════════════════════ */
+
+/* ── symbol / movieclip: a reusable, instanceable clip ───────────────────────── */
+.pf-clip { position: relative; display: inline-block; }
+.pf-clip--placed { position: absolute; translate: -50% -50%; }
+.pf-clip__node { position: absolute; left: 0; top: 0; will-change: transform; }
+/* a non-placed clip with no fixed size: let the FIRST holder define the box,
+   the rest overlay it (common "one sprite + overlays" clip) */
+.pf-clip:not(.pf-clip--placed):not([style*="width"]) > .pf-clip__node:first-child { position: relative; }
+
+/* ── filter: per-element bitmap-filter wrapper ───────────────────────────────── */
+.pf-filter { display: inline-block; }
+.pf-filter--off { filter: none !important; -webkit-filter: none !important; }
+
+/* ── mask: clip / reveal wrapper ─────────────────────────────────────────────── */
+.pf-mask { position: relative; display: block; }
+
+/* ── tint / color effect ─────────────────────────────────────────────────────── */
+.pf-tint { position: relative; display: inline-block; isolation: isolate; }
+.pf-tint__ov { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+
+/* ── shape / vector + morph (SVG) ────────────────────────────────────────────── */
+.pf-shape { display: inline-block; overflow: visible; }
+.pf-morph { display: inline-block; overflow: visible; }
+.pf-shape--spin { animation: pf-shape-spin linear infinite; transform-origin: center; transform-box: fill-box; }
+
+/* ── button-symbol: 4-state button (up/over/down/disabled layered) ───────────── */
+.pf-btnsym { position: relative; display: inline-grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.pf-btnsym:disabled { cursor: default; }
+.pf-btnsym__state { grid-area: 1 / 1; display: inline-grid; place-items: center; opacity: 0; transition: opacity 0.12s ease; pointer-events: none; }
+/* exactly ONE state visible at a time (JS resolves missing states → "up", so a
+   button with only `up` always shows it; up & over never render stacked) */
+.pf-btnsym[data-show="up"] .is-up,
+.pf-btnsym[data-show="over"] .is-over,
+.pf-btnsym[data-show="down"] .is-down,
+.pf-btnsym[data-show="disabled"] .is-disabled { opacity: 1; }
+
+/* ── kinetic typography ──────────────────────────────────────────────────────── */
+.pf-kinetic { display: inline-block; }
+.pf-kinetic__u { display: inline-block; white-space: pre; will-change: transform, opacity; }
+/* effects that ENTER start hidden until .is-played (re-triggerable). duration +
+   delay come from each unit's inline style; we use animation LONGHANDS so the
+   inline animation-delay isn't reset by the shorthand. */
+.pf-kinetic--reveal .pf-kinetic__u,
+.pf-kinetic--rise .pf-kinetic__u,
+.pf-kinetic--fade .pf-kinetic__u { opacity: 0; }
+.pf-kinetic--reveal.is-played .pf-kinetic__u { animation-name: pf-kin-reveal; animation-fill-mode: both; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+.pf-kinetic--rise.is-played .pf-kinetic__u { animation-name: pf-kin-rise; animation-fill-mode: both; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+.pf-kinetic--fade.is-played .pf-kinetic__u { animation-name: pf-kin-fade; animation-fill-mode: both; }
+.pf-kinetic--wave.is-played .pf-kinetic__u { animation-name: pf-kin-wave; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+.pf-kinetic--glitch.is-played .pf-kinetic__u { animation-name: pf-kin-glitch; animation-fill-mode: both; animation-timing-function: steps(2, end); }
+.pf-kinetic--glitch.pf-kinetic--loop.is-played .pf-kinetic__u { animation-iteration-count: infinite; }
+
+/* ═══ Holo FX + loot (shine · sparkle · tilt · pack · gacha) ══════════════════ */
+
+/* ── shine: gloss sweep + holographic foil ───────────────────────────────────── */
+.pf-shine { position: relative; display: inline-block; overflow: hidden; isolation: isolate; border-radius: inherit; }
+.pf-shine__band { position: absolute; inset: -60% -20%; pointer-events: none; mix-blend-mode: screen; transform: translateX(-160%);
+  background: linear-gradient(var(--shine-angle, 20deg), transparent 42%, var(--shine-color, rgba(255,255,255,0.85)) 50%, transparent 58%);
+  animation: pf-shine-sweep linear infinite; }
+.pf-shine--hover .pf-shine__band { animation-play-state: paused; }
+.pf-shine--hover:hover .pf-shine__band { animation-play-state: running; }
+/* holographic foil — ADDITIVE light like the boot's gloss sweep (mix-blend:screen),
+   so it GLOWS on a dark card. The old color-dodge collapsed to mud over near-black.
+   A pointer-following specular glint + iridescent bands that parallax-shift with the
+   pointer = a card that catches the light as you move. Faint at rest, vivid on hover. */
+.pf-shine__foil {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.14; transition: opacity 0.28s ease; border-radius: inherit;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 38%),
+    repeating-linear-gradient(115deg,
+      hsla(190, 100%, 72%, 0.5) 0%, hsla(280, 100%, 72%, 0.5) 7%, hsla(330, 100%, 72%, 0.5) 13%,
+      hsla(45, 100%, 72%, 0.5) 20%, hsla(150, 100%, 72%, 0.5) 27%, hsla(190, 100%, 72%, 0.5) 34%);
+  background-size: 130% 130%, 260% 260%;
+  background-position:
+    calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%),
+    calc(var(--mx, 0.5) * 180%) calc(var(--my, 0.5) * 180%);
+}
+.pf-shine--holo.is-active .pf-shine__foil { opacity: 0.92; }
+
+/* ── sparkle / glimmer ───────────────────────────────────────────────────────── */
+.pf-sparkle { position: relative; display: inline-block; }
+.pf-sparkle--overlay { position: absolute; inset: 0; display: block; pointer-events: none; }
+.pf-sparkle__layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 3; }
+.pf-sparkle__s { position: absolute; transform: translate(-50%, -50%) scale(0); filter: drop-shadow(0 0 3px currentColor); animation: pf-sparkle-twinkle linear infinite; }
+
+/* ── tilt / rotate3d ─────────────────────────────────────────────────────────── */
+.pf-tilt { display: inline-block; }
+.pf-tilt__inner { position: relative; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; will-change: transform; border-radius: inherit; }
+.pf-tilt__inner--spin { animation: pf-tilt-spin-y linear infinite; }
+.pf-tilt__inner--spin.is-x { animation-name: pf-tilt-spin-x; }
+.pf-tilt__glare { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.2s ease; border-radius: inherit; mix-blend-mode: screen;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,0.55), transparent 55%); }
+
+/* ── pack: closed pack + flip-reveal cards (pixel UI: beveled, sharp, hard shadow) */
+.pf-pack { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 16px; }
+.pf-pack__closed { position: relative; cursor: pointer; transition: scale 0.45s ease, box-shadow 0.45s ease; }
+/* packArt (image component): let it define the closed-pack size; crisp pixels */
+.pf-pack__closed .pf-media, .pf-pack__half .pf-media { margin: 0; }
+.pf-pack__closed img, .pf-pack__half img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.pf-pack__back { position: relative; width: 156px; height: 224px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: var(--pf-surface-2); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); box-shadow: var(--pf-shadow); }
+.pf-pack__back-logo { font-family: var(--pf-font); font-size: 40px; color: var(--pf-primary); }
+.pf-pack__hint { font-family: var(--pf-font); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--pf-muted); }
+.pf-pack__hint--float { margin-top: 12px; color: var(--pf-muted); animation: pf-pack-hintpulse 1.6s ease-in-out infinite; }
+/* drifting foil sheen over the default sealed-pack back */
+.pf-pack__sheen { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.22) 50%, transparent 58%); background-size: 280% 280%; animation: pf-pack-sheen 3.6s linear infinite; }
+/* the sealed pack gently floats while it waits to be tapped */
+.pf-pack[data-state="closed"] .pf-pack__closed { animation: pf-pack-float 3.2s ease-in-out infinite; }
+.pf-pack__closed:hover { scale: 1.04; }
+/* charge-up: scale (via `scale` property so it coexists with the shake, which uses
+   `transform`) + a rarity-colored glow that intensifies for high rarity */
+.pf-pack__closed.is-charging { scale: 1.12; box-shadow: 0 0 26px var(--boom, #fff); }
+.pf-pack__closed.is-charging-hot { box-shadow: 0 0 46px var(--boom, #fff), 0 0 92px var(--boom, #fff); }
+.pf-pack__closed.is-shaking { animation: pf-pack-shake 0.3s ease-in-out; }
+/* fast tremor while the rip spritesheet cracks across the pack (keeps charge scale+glow) */
+.pf-pack__closed.is-tearing { animation: pf-pack-shake 0.16s ease-in-out infinite; }
+/* TEAR: two clipped halves of the pack face fly apart hard */
+/* RIP OPEN AT THE TOP: the LID = the top strip (the serrated film-strip cap) peels off
+   and flies away; the BODY = the rest HOLDS OPEN and stays fully visible — it does NOT
+   fade, so the pack is still on screen when the cards erupt out of it (it's swapped for
+   the cards under the eruption flash). The seam is a JAGGED zigzag clip-path shared by
+   both pieces (lid bottom = body top) so it reads torn, not cut. */
+.pf-pack__half { position: absolute; inset: 0; z-index: 6; backface-visibility: hidden; transition: transform 1.2s cubic-bezier(0.34, 0.02, 0.2, 1), opacity 1.2s ease; }
+.pf-pack__half.is-lid {
+  clip-path: polygon(0 0, 100% 0, 100% 17%, 92% 21%, 84% 15%, 76% 21%, 68% 15%, 60% 21%, 52% 15%, 44% 21%, 36% 15%, 28% 21%, 20% 15%, 12% 21%, 4% 15%, 0 19%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 17%, 92% 21%, 84% 15%, 76% 21%, 68% 15%, 60% 21%, 52% 15%, 44% 21%, 36% 15%, 28% 21%, 20% 15%, 12% 21%, 4% 15%, 0 19%);
+  transform-origin: 50% 100%; }
+.pf-pack__half.is-body {
+  clip-path: polygon(0 19%, 4% 15%, 12% 21%, 20% 15%, 28% 21%, 36% 15%, 44% 21%, 52% 15%, 60% 21%, 68% 15%, 76% 21%, 84% 15%, 92% 21%, 100% 17%, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(0 19%, 4% 15%, 12% 21%, 20% 15%, 28% 21%, 36% 15%, 44% 21%, 52% 15%, 60% 21%, 68% 15%, 76% 21%, 84% 15%, 92% 21%, 100% 17%, 100% 100%, 0 100%); }
+.pf-pack__half.is-lid.go { transform: translateY(-230%) rotate(-16deg) scale(0.92); opacity: 0; }
+.pf-pack__half.is-body.go { transform: translateY(22%) scale(0.97); opacity: 0; }
+/* EXPLOSION: flash + shockwave rings + particle sparks (individual translate/scale) */
+.pf-pack__boom { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+.pf-pack__flash { position: absolute; left: 50%; top: 50%; width: 150%; height: 150%; translate: -50% -50%; pointer-events: none; opacity: 0; background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0) 62%); }
+.pf-pack__boom.go .pf-pack__flash { animation: pf-pack-flash 0.5s ease-out forwards; }
+.pf-pack__ring { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; translate: -50% -50%; border: 3px solid var(--boom, #fff); border-radius: 50%; opacity: 0; }
+.pf-pack__boom.go .pf-pack__ring { animation: pf-pack-ring 0.6s ease-out forwards; }
+.pf-pack__boom.go .pf-pack__ring.is-2 { animation-delay: 0.12s; }
+.pf-pack__boom.go .pf-pack__ring.is-3 { animation-delay: 0.24s; }
+.pf-pack__spark { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; translate: -50% -50%; opacity: 0; }
+.pf-pack__boom.go .pf-pack__spark, .pf-pack__cardboom.go .pf-pack__spark { animation: pf-pack-spark 0.6s ease-out forwards; }
+.pf-pack__ripline { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; pointer-events: none; mix-blend-mode: screen; }
+.pf-pack__stage { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; max-width: min(92vw, 640px); }
+/* burst-out entrance per card slot (separate layer from the card flip) */
+.pf-pack__slot { opacity: 0; transform: translateY(-46px) scale(0.3) rotate(-7deg); }
+.pf-pack__slot.is-in { opacity: 1; transform: none; transition: transform 0.52s var(--pf-ease-spring), opacity 0.3s ease; }
+/* card is 125×160 = EXACTLY the base art's 25:32 ratio, so object-fit:cover never
+   crops the ornate frame borders off the premium card art */
+.pf-pack__card { position: relative; width: 118px; height: 151px; cursor: pointer; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 0.5s var(--pf-ease-out), translate 0.25s ease; }
+.pf-pack__card.is-flipped { transform: rotateY(180deg); }
+.pf-pack__card.is-flipped:hover { translate: 0 -8px; }
+/* epic+ brightness flicker goes on the flat .pf-pack__art, NOT the card: a `filter`
+   on the preserve-3d card FLATTENS its 3D context, breaking backface-visibility so
+   the flip stops revealing the front (the "last 2 cards won't reveal" bug). */
+.pf-pack__card.is-hot .pf-pack__art { animation: pf-pack-hot 0.9s steps(2, end) infinite; }
+/* only the FACE-UP side is interactive. Face-down, the front face is rotated away
+   but WebKit can still let it (or its sparkle overlay) intercept the click so it
+   never reaches the back → that card won't flip. Gate pointer-events by flip state. */
+.pf-pack__face--front { pointer-events: none; }
+.pf-pack__card.is-flipped .pf-pack__face--front { pointer-events: auto; }
+.pf-pack__card.is-flipped .pf-pack__face--back { pointer-events: none; }
+.pf-pack__face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--pf-shadow); }
+/* dark face backgrounds so the art's rounded-corner transparency blends in */
+.pf-pack__face--back { background: #0b0e16; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); display: grid; place-items: center; }
+/* the rarity halo lives on the FRONT face box-shadow (NOT a filter on the card —
+   that would flatten the preserve-3d flip in WebKit). It shows only when face-up. */
+.pf-pack__face--front { transform: rotateY(180deg); background: #0a0c12; border: var(--pf-bevel) solid var(--rar, var(--pf-border));
+  box-shadow: 0 0 var(--glow-size, 12px) var(--rar-glow, #fff), var(--pf-shadow); }
+/* composed art: base art fills the card, emblem is the centered subject */
+.pf-pack__art { position: absolute; inset: 0; overflow: hidden; }
+.pf-pack__base { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: pixelated; }
+.pf-pack__art--tint { background: radial-gradient(120% 90% at 50% 34%, color-mix(in srgb, var(--rar, #555) 55%, #0a0c12), #06070b 78%); }
+/* a card content provided as a `component:` (e.g. image) still fills the art box */
+.pf-pack__art .pf-media, .pf-pack__art .pf-media__box { width: 100%; height: 100%; margin: 0; padding: 0; border: 0; }
+.pf-pack__art .pf-media__img { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: pixelated; }
+/* emblem sits in the UPPER portion (top 38%) so it stays well clear of the name plate
+   even if a font/line-height difference renders the plate taller than expected */
+.pf-pack__emblem { position: absolute; left: 50%; top: 38%; translate: -50% -50%; display: grid; place-items: center; }
+.pf-pack__emblem-img { width: 54px; height: auto; display: block; image-rendering: pixelated;
+  filter: drop-shadow(0 0 5px var(--rar-glow, #fff)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); animation: pf-pack-emblem 2.6s ease-in-out infinite; }
+.pf-pack__card.is-hot .pf-pack__emblem-img { filter: drop-shadow(0 0 9px var(--rar-glow, #fff)) drop-shadow(0 0 18px var(--rar, #fff)); }
+/* foil holo sweep (idle loop on the back; one-shot on rare+ reveal via .is-sweep) */
+.pf-pack__holo { position: absolute; inset: 0; overflow: hidden; pointer-events: none; mix-blend-mode: screen; }
+.pf-pack__holo::before { content: ''; position: absolute; top: -25%; left: 0; width: 36%; height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); rotate: 18deg; translate: -200% 0; }
+.pf-pack__face--back .pf-pack__holo::before { animation: pf-pack-holo 3.6s linear infinite; }
+.pf-pack__holo.is-sweep::before { animation: pf-pack-holo 0.9s ease-out 1; }
+/* readable lower-third name plate over the art */
+.pf-pack__plate { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 12px 4px 5px; display: flex; flex-direction: column; align-items: center; gap: 1px; line-height: 1;
+  background: linear-gradient(transparent, rgba(4, 6, 11, 0.85) 60%); }
+.pf-pack__cardname { font-family: var(--pf-font); font-size: 10px; line-height: 1.05; text-transform: uppercase; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95); }
+.pf-pack__rar { font-family: var(--pf-font); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--rar, var(--pf-muted)); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95); }
+.pf-pack__name { font-family: var(--pf-font); font-weight: 700; color: var(--pf-text); }
+.pf-pack__cardboom { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.pf-pack__scrim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 9990; transition: opacity 0.4s ease; }
+.pf-pack__scrim.go { opacity: 0.55; }
+/* bright flash at the pack opening as the cards erupt out (rarity-tinted) */
+.pf-pack__erupt { position: fixed; width: 230px; height: 230px; translate: -50% -50%; border-radius: 50%; pointer-events: none; z-index: 9992; opacity: 0;
+  background: radial-gradient(circle, #fff 0%, color-mix(in srgb, var(--boom, #fff) 65%, transparent) 36%, transparent 68%); }
+.pf-pack__erupt.go { animation: pf-pack-flash 0.55s ease-out forwards; }
+.pf-pack.is-quake { animation: pf-pack-quake 0.4s steps(2, end) 2; }
+
+/* ── gacha: banner · summon orb · results grid (pixel UI) ─────────────────────── */
+.pf-gacha { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 280px; }
+.pf-gacha__banner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.pf-gacha__title { font-family: var(--pf-font); font-size: 20px; letter-spacing: 2px; text-transform: uppercase; color: var(--pf-primary); }
+.pf-gacha__btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+/* pull / again buttons reuse the design-system .pf-btn (set in gacha.js) */
+.pf-gacha__rates { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; font-family: var(--pf-font); font-size: 11px; color: var(--pf-muted); }
+.pf-gacha__rate { display: inline-flex; align-items: center; gap: 5px; }
+.pf-gacha__rdot { width: 8px; height: 8px; display: inline-block; border: 1px solid rgba(0, 0, 0, 0.35); } /* square pixel dot */
+.pf-gacha__summon { display: grid; place-items: center; min-height: 220px; }
+.pf-gacha__orb { position: relative; width: 116px; height: 116px; border-radius: 50%; box-shadow: 0 0 22px var(--rar, #5b8cff), 0 0 0 var(--pf-bevel) rgba(0, 0, 0, 0.4);
+  background: radial-gradient(circle at 38% 32%, #fff, var(--rar, #5b8cff) 58%, color-mix(in srgb, var(--rar, #5b8cff) 35%, #000) 100%); }
+.pf-gacha__summon.is-charge .pf-gacha__orb { animation: pf-gacha-charge 1.5s steps(10, end) forwards; }
+.pf-gacha__results { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.pf-gacha__grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: min(92vw, 560px); }
+.pf-gacha__card { position: relative; width: 90px; height: 126px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--pf-surface); border: var(--pf-bevel) solid var(--rar, var(--pf-border)); box-shadow: var(--pf-shadow); opacity: 0; transform: translateY(8px);
+  animation: pf-gacha-pop 0.4s var(--pf-ease-out) forwards; }
+.pf-gacha__cname { font-family: var(--pf-font); font-weight: 700; font-size: 12px; color: var(--pf-text); }
+.pf-gacha__cardname { position: absolute; top: 5px; font-family: var(--pf-font); font-size: 9px; text-transform: uppercase; color: var(--pf-text); }
+.pf-gacha__crar { position: absolute; bottom: 5px; font-family: var(--pf-font); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--rar, var(--pf-muted)); }
+
+/* ── roguelike: dungeon canvas + HUD ──────────────────────────────────────────── */
+.pf-rl { position: relative; display: inline-flex; flex-direction: column; gap: 8px; outline: none; font-family: var(--pf-font); }
+.pf-rl__canvas { display: block; image-rendering: pixelated; background: #05060a; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); box-shadow: var(--pf-shadow); }
+.pf-rl.is-hurt .pf-rl__canvas { animation: pf-rl-hurt 0.32s ease; }
+/* top HUD */
+.pf-rl__hud { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--pf-text); }
+.pf-rl__hpbar { position: relative; flex: 1; height: 16px; min-width: 120px; background: #1a0e10; border: 2px solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); overflow: hidden; }
+.pf-rl__hpfill { height: 100%; width: 100%; background: linear-gradient(#5fd66a, #2f9a44); transition: width 0.2s ease; }
+.pf-rl__hpfill.is-low { background: linear-gradient(#ff6a5a, #c02e2e); }
+.pf-rl__hptext { position: absolute; left: 50%; top: 50%; translate: -50% -50%; font-size: 9px; color: #fff; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9); letter-spacing: 1px; }
+.pf-rl__stat { font-size: 11px; letter-spacing: 1px; color: var(--pf-primary); white-space: nowrap; }
+/* message log */
+.pf-rl__log { height: 84px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; font-size: 10px; line-height: 1.5; color: var(--pf-muted); }
+.pf-rl__line:last-child { color: var(--pf-text); }
+.pf-rl__hint { font-size: 9px; letter-spacing: 0.5px; color: var(--pf-muted); opacity: 0.75; text-transform: uppercase; }
+/* death overlay (sits over the canvas) */
+.pf-rl__over { position: absolute; left: 0; right: 0; top: 27px; height: calc(100% - 27px); display: grid; place-content: center; gap: 8px; text-align: center; background: rgba(4, 6, 11, 0.82); z-index: 3; animation: pf-rl-fade 0.4s ease; }
+.pf-rl__over-title { font-size: 30px; letter-spacing: 4px; color: #ff5d6c; text-shadow: 0 2px 0 #000; }
+.pf-rl__over-sub { font-size: 12px; color: #fff; letter-spacing: 1px; }
+.pf-rl__over-key { font-size: 10px; color: var(--pf-muted); text-transform: uppercase; animation: pf-pack-hintpulse 1.6s ease-in-out infinite; }
+@keyframes pf-rl-hurt { 0%, 100% { filter: none; transform: translate(0, 0); } 25% { filter: brightness(1.6) sepia(1) hue-rotate(-30deg); transform: translate(-3px, 2px); } 60% { transform: translate(3px, -1px); } }
+@keyframes pf-rl-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── pixel-sprite / pixel-scene: engine-baked procedural pixel art ─────────────── */
+.pf-pxs { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; vertical-align: top; }
+.pf-pxs__c { display: block; image-rendering: pixelated; }
+.pf-pxs__label { font-family: var(--pf-font); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--pf-muted); }
+.pf-pxs--bob .pf-pxs__c { animation: pf-pxs-bob 2.4s ease-in-out infinite; }
+.pf-pxs--float .pf-pxs__c { animation: pf-pxs-bob 3.6s ease-in-out infinite; }
+.pf-pxs--spin .pf-pxs__c { animation: pf-pxs-spin 6s linear infinite; }
+@keyframes pf-pxs-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9%); } }
+@keyframes pf-pxs-spin { to { transform: rotate(360deg); } }
+.pf-pxscene { display: inline-block; line-height: 0; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); box-shadow: var(--pf-shadow); }
+.pf-pxscene__c { display: block; image-rendering: pixelated; }
+/* floating-island: full-screen pixel scene */
+.pf-island { position: fixed; inset: 0; z-index: 0; outline: none; }
+.pf-island__c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+.pf-island__hint { position: absolute; left: 10px; bottom: 10px; z-index: 1; font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); opacity: 0.8; pointer-events: none; }
+
+/* pixel-stage family — full-screen pixel canvases. The stage owns one canvas;
+   pixel-sky/clouds/tilemap each own theirs and STACK by DOM order (same z-index,
+   position:fixed → later sibling paints on top) or via an explicit inline z. */
+.pf-pxstage { position: fixed; inset: 0; z-index: 0; outline: none; }
+.pf-pxstage.is-embed { position: absolute; } /* nested inside a zoom stage (fill:false) */
+.pf-pxstage__c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; }
+.pf-pxstage__anchor { position: absolute; margin: 0; padding: 0; pointer-events: none; } /* invisible [data-stage-anchor] marker — a pin/frame target; JS sets left/top/width/height as a logical-fraction of the canvas */
+.pf-pxstage__hint { position: absolute; left: 10px; bottom: 10px; z-index: 1; font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); opacity: 0.8; pointer-events: none; }
+/* paint-tool palette (Stage 4) — body-mounted toolbar; reuses .pf-btn + pixel tokens */
+.pf-pxstage__palette { position: fixed; left: 12px; top: 12px; z-index: 60; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 6px; background: var(--pf-bg-2); border: 2px solid var(--pf-border); font-family: var(--pf-font); }
+.pf-pxstage__palette .pf-btn { padding: 4px 9px; font-size: 11px; }
+.pf-pxstage__palette .pf-btn.is-active { outline: 2px solid var(--pf-accent); outline-offset: 1px; }
+.pf-pxstage.is-painting .pf-pxstage__c { cursor: crosshair; }
+
+/* ldtk — same canvas/anchor contract as pixel-stage */
+.pf-ldtk { position: fixed; inset: 0; z-index: 0; outline: none; }
+.pf-ldtk.is-embed { position: absolute; }
+.pf-ldtk__c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; }
+.pf-ldtk__anchor { position: absolute; margin: 0; padding: 0; pointer-events: none; } /* invisible [data-stage-anchor] marker — a pin/frame target */
+.pf-ldtk__child { position: absolute; pointer-events: none; } /* a component mounted for an LDtk entity / actor, positioned each frame at its anchor */
+.pf-ldtk__hint { position: absolute; left: 10px; bottom: 10px; z-index: 1; font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); opacity: 0.8; pointer-events: none; }
+.pf-ldtk__hint.is-flash { color: #9affa0; opacity: 1; }
+
+/* flip — FLIP layout animation: cell/cellinner/expand styles are set in JS (components/flip.js) */
+
+/* svg-draw — inline SVG line-drawing */
+.pf-svgdraw { display: block; width: 100%; height: 100%; }
+.pf-svgdraw__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.pf-pxsky, .pf-pxclouds, .pf-pxtilemap { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.pf-pxsky__c, .pf-pxclouds__c, .pf-pxtilemap__c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; }
+
+/* raycast — line-of-sight / dynamic-light demo (bordered showcase box) */
+.pf-raycast { display: inline-block; line-height: 0; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); box-shadow: var(--pf-shadow); position: relative; }
+.pf-raycast__c { display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; cursor: crosshair; }
+.pf-raycast__hint { position: absolute; left: 8px; bottom: 8px; font-family: var(--pf-font); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9); opacity: 0.66; pointer-events: none; line-height: 1.2; }
+
+/* ik — procedural-animation mannequin (bordered showcase box) */
+.pf-ik { display: inline-block; line-height: 0; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); box-shadow: var(--pf-shadow); position: relative; }
+.pf-ik__c { display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; cursor: crosshair; }
+.pf-ik__hint { position: absolute; left: 8px; bottom: 8px; font-family: var(--pf-font); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9); opacity: 0.66; pointer-events: none; line-height: 1.2; }
+
+/* status-effects — buff/debuff demo (DOM, pixel UI) */
+.pf-statusfx { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 4px; }
+.pf-statusfx__creature { width: 84px; height: 84px; background: #4fae57; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); border-radius: 14px 14px 18px 18px; position: relative; box-shadow: inset 0 -10px 0 rgba(0,0,0,0.18), var(--pf-shadow); transition: filter 0.2s; }
+.pf-statusfx__creature.is-hurt { filter: drop-shadow(0 0 6px var(--tint)); background: color-mix(in srgb, #4fae57 64%, var(--tint)); }
+.pf-statusfx__creature.is-shake { animation: pf-statusfx-shake 0.18s steps(2) infinite; }
+@keyframes pf-statusfx-shake { 0% { transform: translate(-1px, 0); } 50% { transform: translate(1px, -1px); } 100% { transform: translate(-1px, 1px); } }
+.pf-statusfx__face { position: absolute; top: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; }
+.pf-statusfx__eye { width: 8px; height: 12px; background: #15201a; border-radius: 3px; }
+.pf-statusfx__hptrack { width: 220px; height: 14px; background: #14161d; border: 2px solid #000; border-radius: 3px; overflow: hidden; }
+.pf-statusfx__hpfill { height: 100%; width: 100%; background: #5fd16b; transition: width 0.1s linear, background 0.2s; }
+.pf-statusfx__hplabel { font-family: var(--pf-font); font-size: 11px; letter-spacing: 1px; color: var(--pf-text); }
+.pf-statusfx__chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 22px; }
+.pf-statusfx__chip { display: flex; flex-direction: column; gap: 2px; padding: 3px 6px; background: color-mix(in srgb, var(--fx) 22%, #14161d); border: 1px solid var(--fx); border-radius: 4px; min-width: 56px; }
+.pf-statusfx__chiplabel { font-family: var(--pf-font); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--fx); }
+.pf-statusfx__chipbar { height: 4px; background: rgba(0,0,0,0.5); border-radius: 2px; overflow: hidden; }
+.pf-statusfx__chipfill { height: 100%; background: var(--fx); transition: width 0.1s linear; }
+.pf-statusfx__buttons { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.pf-statusfx__btn { font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 5px 9px; color: #fff; background: color-mix(in srgb, var(--fx, #6f7fb0) 70%, #000); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); cursor: pointer; }
+.pf-statusfx__btn:active { border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); }
+.pf-statusfx__btn--clear { --fx: #5a6170; }
+
+/* motion — oscillation wrapper (inline-block so translate/scale/rotate apply) */
+.pf-motion { display: inline-block; will-change: transform; }
+
+/* dmi — BYOND sprite-atlas viewer */
+.pf-dmi { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.pf-dmi__c { display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); background: repeating-conic-gradient(#2a2f3a 0% 25%, #232732 0% 50%) 0 0 / 12px 12px; }
+.pf-dmi__caption { font-family: var(--pf-font); font-size: 9px; letter-spacing: 0.5px; color: var(--pf-text-muted, #9aa6bd); max-width: 220px; text-align: center; line-height: 1.3; }
+
+/* dmi-scene — forest composed from real .dmi atlases */
+.pf-dmiscene { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.pf-dmiscene__c { display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; border: var(--pf-bevel) solid; border-color: var(--pf-bevel-dark) var(--pf-bevel-light) var(--pf-bevel-light) var(--pf-bevel-dark); box-shadow: var(--pf-shadow); }
+.pf-dmiscene__caption { font-family: var(--pf-font); font-size: 9px; letter-spacing: 0.5px; color: var(--pf-text-muted, #9aa6bd); }
+
+/* dmi-sprite — single composable .dmi icon-state (bare inline sprite) */
+.pf-dmisprite { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; line-height: 0; }
+.pf-dmisprite__c { display: block; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; }
+.pf-dmisprite.is-flip .pf-dmisprite__c { transform: scaleX(-1); }
+.pf-dmisprite__label { font-family: var(--pf-font); font-size: 9px; letter-spacing: 1px; color: var(--pf-text-muted, #9aa6bd); line-height: 1.2; }
+
+/* image-parallax — slice one image into a grid + both-axis pointer parallax */
+.pf-imgpar { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0a0c12; z-index: 0; }
+.pf-imgpar__stage { position: relative; transform-style: preserve-3d; will-change: transform; }
+.pf-imgpar__tile { position: absolute; background-repeat: no-repeat; will-change: transform; backface-visibility: hidden; }
+.pf-imgpar__overlay { position: absolute; overflow: hidden; }
+.pf-imgpar__ovmedia { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── frame / overlays / pin (generic anchoring layout) ───────────────────────── */
+.pf-frame { position: relative; }
+.pf-frame__box { position: absolute; }
+.pf-frame__base { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pf-frame__base img, .pf-frame__base video, img.pf-frame__base, video.pf-frame__base { width: 100%; height: 100%; object-fit: var(--pf-frame-fit, cover); display: block; }
+.pf-overlay { position: absolute; }
+.pf-overlay--clip { overflow: hidden; }
+.pf-pin { position: fixed; }
+.pf-pin__inner { position: absolute; left: 0; top: 0; }
+.pf-imgpar.has-vignette::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.55) 100%); }
+.pf-imgpar__hint { position: absolute; left: 12px; bottom: 12px; z-index: 2; font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); opacity: 0.55; pointer-events: none; }
+
+/* secret — hidden easter-egg button + reveal overlay */
+.pf-secret { position: fixed; z-index: 60; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.16); font-family: var(--pf-font); font-size: 14px; line-height: 1; cursor: pointer; transition: opacity .25s, color .25s, background .25s, transform .15s, box-shadow .25s; }
+.pf-secret:hover { color: #fff; background: rgba(255,255,255,0.18); transform: scale(1.18); box-shadow: 0 0 14px rgba(255,255,255,0.35); }
+.pf-secret__back { position: fixed; inset: 0; z-index: 220; display: flex; align-items: center; justify-content: center; background: rgba(5,7,12,0); -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); transition: background .3s, backdrop-filter .3s, -webkit-backdrop-filter .3s; }
+.pf-secret__back.is-in { background: rgba(5,7,12,0.62); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.pf-secret__card { min-width: 240px; max-width: 80vw; padding: 22px 26px; text-align: center; background: var(--pf-panel, #161b27); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); box-shadow: var(--pf-shadow); transform: scale(0.9); opacity: 0; transition: transform .3s, opacity .3s; }
+.pf-secret__back.is-in .pf-secret__card { transform: scale(1); opacity: 1; }
+.pf-secret__title { font-family: var(--pf-font); font-size: 16px; letter-spacing: 1px; color: var(--pf-text); margin-bottom: 8px; }
+.pf-secret__msg { font-family: var(--pf-font); font-size: 11px; color: var(--pf-text-muted, #9aa6bd); line-height: 1.5; margin-bottom: 14px; }
+.pf-secret__close { font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; color: #fff; background: color-mix(in srgb, var(--pf-accent, #6f7fb0) 70%, #000); border: var(--pf-bevel) solid; border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light); cursor: pointer; }
+
+/* zoom — pan/zoom stage */
+.pf-zoom { position: relative; overflow: hidden; background: #000; touch-action: none; }
+.pf-zoom.is-fill { position: fixed; inset: 0; z-index: 0; }
+.pf-zoom__content { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+.pf-zoom__img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+.pf-zoom__hint { position: absolute; left: 12px; bottom: 12px; z-index: 3; font-family: var(--pf-font); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #eaf4ff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); opacity: 0.5; pointer-events: none; }
+.pf-zoom.is-fill { cursor: zoom-in; }
+
+/* spotlight — flashlight-in-the-dark overlay (a <canvas>; the beam is carved in JS) */
+.pf-spotlight { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+/* ── blur — dial-a-blur wrapper. Filters the element's OWN content (filter: blur),
+   so it works on <canvas>/<video>/img/text alike. Strength + the filter-transition
+   are set inline by blur.js; this is just structure + the optional spoiler veil. */
+.pf-blur { position: relative; display: block; overflow: hidden; }
+.pf-blur.is-fill { position: fixed; inset: 0; z-index: 0; }
+.pf-blur--interactive { cursor: pointer; }
+.pf-blur__content { position: relative; width: 100%; height: 100%; will-change: filter; }
+.pf-blur__content > img,
+.pf-blur__content > canvas,
+.pf-blur__content > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pf-blur__img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+.pf-blur__veil { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(8, 11, 18, 0.16); opacity: 1; transition: opacity .35s ease; pointer-events: none; }
+.pf-blur.is-revealed .pf-blur__veil { opacity: 0; }
+.pf-blur__label { font-family: var(--pf-font); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85); }
+
+/* ── frost — frosted glass. Blurs what's BEHIND via backdrop-filter (paired -webkit-
+   for Safari). Strength/tint/saturation set inline by frost.js. LANDMINE: cannot
+   blur a <video> backdrop (a video is its own compositing layer) — to blur a video,
+   put `blur` on the video itself. */
+.pf-frost { position: relative; display: block; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2);
+  background: rgba(10, 14, 22, 0.32); }
+.pf-frost.is-fill { position: fixed; inset: 0; z-index: 40; border-radius: 0; }
+.pf-frost.is-clear { border-color: transparent; }
+.pf-frost__content { position: relative; width: 100%; height: 100%; }
+
+/* asyncresearch live feed — a glowing CCTV monitor (positioned in WORLD coords by
+   a hotspots obj-spot, not CSS px); this only carries the screen-light glow */
+.pf-async-feed { cursor: default; box-shadow: 0 0 0 2px rgba(150, 195, 255, 0.12), 0 0 22px 2px rgba(120, 175, 255, 0.18); }
+.pf-async-feed::before { content: ''; position: absolute; inset: -70px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at center, rgba(120, 175, 255, 0.30), rgba(110, 165, 250, 0.10) 45%, rgba(110, 165, 250, 0) 72%); animation: pf-feed-glow 4.2s ease-in-out infinite; }
+@keyframes pf-feed-glow { 0%, 100% { opacity: 0.8; } 44% { opacity: 1; } 50% { opacity: 0.55; } 56% { opacity: 0.95; } 78% { opacity: 0.72; } }
+
+/* image-parallax embedded (nested in a zoom): fill the host, not the viewport */
+.pf-imgpar.is-embed { position: absolute; inset: 0; z-index: auto; }
+
+/* ── dialogue (RPG/VN conversation + tutorial speech) ───────────────────────── */
+.pf-dialogue { position: fixed; z-index: 60; pointer-events: none; }
+.pf-dialogue__box { pointer-events: auto; cursor: pointer; display: block; padding: 14px 16px; }
+.pf-dialogue--bar { left: 50%; bottom: 22px; translate: -50% 0; width: min(680px, 92vw); }
+.pf-dialogue--bubble { translate: -50% -100%; max-width: 280px; }
+.pf-dialogue--bubble .pf-dialogue__box { padding: 10px 13px; }
+/* bubble tail (pointing down at the character it follows) */
+.pf-dialogue--bubble .pf-dialogue__box::after {
+  content: ''; position: absolute; left: 50%; bottom: -9px; translate: -50% 0;
+  border-left: 9px solid transparent; border-right: 9px solid transparent;
+  border-top: 9px solid var(--pf-line, #2a3346);
+}
+.pf-dialogue__row { display: flex; gap: 12px; align-items: flex-start; }
+.pf-dialogue__col { flex: 1; min-width: 0; }
+.pf-dialogue__portrait { width: 56px; height: 56px; image-rendering: pixelated; border: 1px solid var(--pf-line, #2a3346); border-radius: 4px; object-fit: cover; flex: none; }
+.pf-dialogue__name { font: 700 12px/1.2 var(--pf-font-pixel, var(--pf-font-mono, monospace)); letter-spacing: 0.06em; text-transform: uppercase; color: var(--pf-accent, #6cf); margin-bottom: 4px; }
+.pf-dialogue__text { margin: 0; min-height: 1.4em; white-space: pre-wrap; }
+/* blinking caret while typing */
+.pf-dialogue.is-typing .pf-dialogue__text::after { content: '▌'; margin-left: 1px; animation: pf-dlg-caret 0.7s step-end infinite; opacity: 0.7; }
+@keyframes pf-dlg-caret { 50% { opacity: 0; } }
+.pf-dialogue__choices { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.pf-dialogue__choices[hidden] { display: none; }   /* [hidden] must beat display:flex */
+.pf-dialogue__choice { text-align: left; justify-content: flex-start; }
+.pf-dialogue__choice.is-selected { outline: 2px solid var(--pf-accent, #6cf); outline-offset: 1px; }
+.pf-dialogue__hint { text-align: right; color: var(--pf-muted, #8aa); font-size: 12px; margin-top: 6px; animation: pf-dlg-bob 1.1s ease-in-out infinite; }
+@keyframes pf-dlg-bob { 50% { translate: 0 3px; } }
+
+/* ── gl-scene — custom WebGL2 3D scene ─────────────────────────────────────── */
+.pf-glscene { position: relative; overflow: hidden; }
+.pf-glscene.is-fill { position: fixed; inset: 0; z-index: 0; }
+.pf-glscene.is-embed { width: 100%; height: 100%; min-height: 240px; }
+.pf-glscene__c { display: block; width: 100%; height: 100%; cursor: crosshair; }
+.pf-glscene.is-fill .pf-glscene__c { width: 100vw; height: 100vh; }
+.pf-glscene__anchor { position: absolute; width: 0; height: 0; pointer-events: none; }
+.pf-glscene__nogl { position: absolute; inset: 0; display: grid; place-items: center; color: var(--pf-muted, #8aa); font-family: var(--pf-font-body, monospace); }
+
+/* ── camcorder — 90s viewfinder overlay ────────────────────────────────────── */
+.pf-camcorder { position: fixed; inset: 0; pointer-events: none; font-family: 'VT323', 'Courier New', monospace; color: #e8e8e0; text-shadow: 1px 1px 0 rgba(0,0,0,0.8), 0 0 6px rgba(230,230,220,0.35); }
+.pf-camcorder__rec { position: absolute; top: 4%; left: 5%; font-size: clamp(16px, 2.4vw, 28px); letter-spacing: 0.18em; display: flex; align-items: center; gap: 0.5em; }
+.pf-camcorder__dot { width: 0.55em; height: 0.55em; border-radius: 50%; background: #f33; box-shadow: 0 0 8px #f33; animation: pf-cam-blink 1.1s steps(1) infinite; }
+@keyframes pf-cam-blink { 50% { opacity: 0; } }
+.pf-camcorder__corner { position: absolute; width: 34px; height: 26px; border: 2px solid rgba(232,232,224,0.85); }
+.pf-camcorder__corner.is-tl { top: 3.4%; left: 4%; border-right: 0; border-bottom: 0; }
+.pf-camcorder__corner.is-tr { top: 3.4%; right: 4%; border-left: 0; border-bottom: 0; }
+.pf-camcorder__corner.is-bl { bottom: 4%; left: 4%; border-right: 0; border-top: 0; }
+.pf-camcorder__corner.is-br { bottom: 4%; right: 4%; border-left: 0; border-top: 0; }
+.pf-camcorder__cross { position: absolute; left: 50%; top: 50%; translate: -50% -50%; font-size: clamp(18px, 2.2vw, 26px); font-style: normal; opacity: 0.85; }
+.pf-camcorder__counter { position: absolute; bottom: 6.5%; left: 6%; font-size: clamp(14px, 2vw, 24px); letter-spacing: 0.12em; }
+.pf-camcorder__date { position: absolute; bottom: 3.2%; left: 6%; font-size: clamp(14px, 2vw, 24px); letter-spacing: 0.12em; }
+.pf-camcorder__iso { position: absolute; bottom: 3.2%; right: 6%; font-size: clamp(13px, 1.8vw, 22px); letter-spacing: 0.12em; }
+.pf-camcorder__batt { position: absolute; top: 4%; right: 5%; font-size: clamp(14px, 2vw, 24px); letter-spacing: 0.1em; }
+.pf-glscene.is-overlay { position: fixed; inset: 0; z-index: 30; pointer-events: none; background: transparent; }
+
+/* ── gl-gunfeel — crosshair + hitmarker overlay ────────────────────────────── */
+.pf-gunfeel { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+.pf-crosshair { position: absolute; left: 50%; top: 50%; --ch-gap: 7px; transition: opacity 90ms linear; }
+.pf-crosshair__dot { position: absolute; width: 2px; height: 2px; left: -1px; top: -1px; background: var(--pf-text, #e8f0f0); box-shadow: 0 0 3px rgba(0,0,0,0.9); }
+.pf-crosshair__line { position: absolute; background: var(--pf-text, #e8f0f0); box-shadow: 0 0 3px rgba(0,0,0,0.9); transition: transform 70ms ease-out; }
+.pf-crosshair__line--t, .pf-crosshair__line--b { width: 2px; height: 7px; left: -1px; }
+.pf-crosshair__line--l, .pf-crosshair__line--r { width: 7px; height: 2px; top: -1px; }
+.pf-crosshair__line--t { bottom: 0; transform: translateY(calc(var(--ch-gap) * -1)); }
+.pf-crosshair__line--b { top: 0; transform: translateY(var(--ch-gap)); }
+.pf-crosshair__line--l { right: 0; transform: translateX(calc(var(--ch-gap) * -1)); }
+.pf-crosshair__line--r { left: 0; transform: translateX(var(--ch-gap)); }
+.pf-hitmark { position: absolute; left: 50%; top: 50%; opacity: 0; }
+.pf-hitmark__line { position: absolute; left: 0; top: 0; width: 14px; height: 2px; background: #ff5a4a; box-shadow: 0 0 4px rgba(255,60,40,0.7); }
+.pf-hitmark.is-hit { animation: pf-hitmark-pop 160ms ease-out; }
+@keyframes pf-hitmark-pop {
+  0% { opacity: 1; transform: scale(1.5); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.9); }
+}
+
+/* ── gl-dialogue — proximity prompt + conversation bar over a gl-scene ────── */
+.pf-gl-dialogue { font-family: var(--pf-font); }
+.pf-gl-dialogue__prompt {
+  position: fixed; left: 50%; bottom: 96px; translate: -50% 0; z-index: 60;
+  padding: 6px 14px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--pf-text); background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  pointer-events: none; opacity: 0; visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s, translate 0.18s ease;
+}
+.pf-gl-dialogue__prompt.is-on { opacity: 1; visibility: visible; translate: -50% -4px; }
+
+.pf-gl-dialogue__bar {
+  position: fixed; left: 50%; bottom: 56px; translate: -50% 0; z-index: 80;
+  width: min(720px, calc(100vw - 48px)); padding: 14px 20px 16px;
+  color: var(--pf-text); background: var(--pf-surface);
+  border: var(--pf-bevel) solid;
+  border-color: var(--pf-bevel-light) var(--pf-bevel-dark) var(--pf-bevel-dark) var(--pf-bevel-light);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity 0.22s ease, visibility 0.22s, transform 0.22s ease;
+}
+.pf-gl-dialogue__bar.is-on { opacity: 1; visibility: visible; transform: translateY(0); }
+.pf-gl-dialogue__speaker {
+  font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--pf-accent); margin-bottom: 6px;
+}
+.pf-gl-dialogue__text { font-size: 16px; line-height: 1.4; }
+.pf-gl-dialogue__hint {
+  position: absolute; right: 14px; bottom: 8px; font-size: 13px; color: var(--pf-bevel-dark);
+  animation: pf-gl-dialogue-bob 1s ease-in-out infinite;
+}
+@keyframes pf-gl-dialogue-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+
+/* ── cinematic / cutscene chrome (_cinematic.js · cutscene · gl-cutscene) ─────── */
+.pf-cine-stage { position: fixed; inset: 0; z-index: 9400; background: #02060c; overflow: hidden; }
+.pf-cine-layer { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.pf-cine-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.pf-cine { position: fixed; inset: 0; z-index: 9500; pointer-events: none; }
+.pf-cine__bar { position: absolute; left: 0; right: 0; height: 0; background: #000; transition: height 0.55s cubic-bezier(.4,0,.2,1); }
+.pf-cine__bar--top { top: 0; }
+.pf-cine__bar--bot { bottom: 0; }
+.pf-cine--bars.is-open .pf-cine__bar { height: 10vh; }
+
+.pf-cine__cap {
+  position: absolute; left: 0; right: 0; bottom: 13vh; padding: 0 9%;
+  text-align: center; color: #eaf6ff;
+  font-size: clamp(15px, 2.3vw, 26px); font-weight: 600; letter-spacing: 0.3px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9);
+  opacity: 0; translate: 0 10px; transition: opacity 0.45s ease, translate 0.45s ease;
+}
+.pf-cine__cap.is-show { opacity: 1; translate: 0 0; }
+
+.pf-cine__prog { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.12); }
+.pf-cine__progfill { display: block; height: 100%; width: 0; background: var(--pf-accent, #43e5ff); transition: width 0.35s linear; box-shadow: 0 0 8px var(--pf-accent, #43e5ff); }
+
+.pf-cine__skip {
+  position: absolute; bottom: calc(10vh + 14px); right: 20px; pointer-events: auto;
+  font: inherit; font-size: 13px; letter-spacing: 0.5px; color: #cfe8ff;
+  background: rgba(8, 16, 28, 0.6); border: 1px solid rgba(120, 190, 240, 0.4);
+  border-radius: 6px; padding: 6px 12px; cursor: pointer;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+.pf-cine__skip:hover { background: rgba(20, 40, 64, 0.85); border-color: var(--pf-accent, #43e5ff); }
+
+/* ── skill-tree (hex talent tree) ──────────────────────────────────────────── */
+.pf-skt { color: var(--pf-fg, #e8eefc); }
+.pf-skt__title { font-family: var(--pf-font-display, inherit); font-size: 18px; margin: 0 0 12px; letter-spacing: .02em; }
+.pf-skt__area { position: relative; margin: 0 auto; }
+.pf-skt__links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.pf-skt__link { stroke: rgba(120, 140, 175, .28); stroke-width: 4; stroke-linecap: round; }
+.pf-skt__link.is-active { stroke: rgba(120, 230, 255, .55); }
+/* flat-top hexagon node */
+.pf-skt__hex {
+  position: absolute; width: var(--skt-size, 92px); aspect-ratio: 1 / 0.866;
+  transform: translate(-50%, -50%); padding: 0; border: 0; cursor: pointer;
+  -webkit-clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--skt-fill) 78%, #fff 12%), var(--skt-fill));
+  box-shadow: 0 0 0 4px var(--skt-edge) inset, 0 6px 14px rgba(0,0,0,.45), 0 0 16px var(--skt-glow);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+  font-family: var(--pf-font, inherit);
+}
+.pf-skt__hex:hover { filter: brightness(1.08); transform: translate(-50%, -50%) scale(1.04); }
+.pf-skt__hex:active { transform: translate(-50%, -50%) scale(.97); }
+.pf-skt__icon { font-size: calc(var(--skt-size, 92px) * .42); line-height: 1; pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
+/* rank counter — top */
+.pf-skt__rank {
+  position: absolute; top: 9%; left: 50%; transform: translateX(-50%);
+  font-size: calc(var(--skt-size, 92px) * .15); font-weight: 700; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.8); pointer-events: none; white-space: nowrap;
+}
+/* cost badge — bottom */
+.pf-skt__cost {
+  position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: calc(var(--skt-size, 92px) * .135); font-weight: 700; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.8); pointer-events: none; white-space: nowrap;
+}
+/* states */
+.pf-skt__hex.is-locked {
+  --skt-edge: #525a6b; --skt-fill: #3a3f4c; --skt-glow: transparent;
+  cursor: not-allowed; filter: saturate(.4) brightness(.85);
+}
+.pf-skt__hex.is-maxed { box-shadow: 0 0 0 4px var(--skt-edge) inset, 0 0 22px var(--skt-glow), 0 6px 14px rgba(0,0,0,.45); }
+.pf-skt__hex.is-maxed::after {
+  content: '✓'; position: absolute; top: 6%; right: 12%; font-size: calc(var(--skt-size,92px)*.16);
+  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.8);
+}
+.pf-skt__hex.is-can { animation: pf-skt-pulse 1.6s ease-in-out infinite; }
+.pf-skt__hex.is-poor { filter: brightness(.92); }
+.pf-skt__hex.is-poor .pf-skt__cost { color: #ff9a9a; }
+.pf-skt__hex.is-nope { animation: pf-skt-shake .28s ease; }
+@keyframes pf-skt-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--skt-edge) inset, 0 6px 14px rgba(0,0,0,.45), 0 0 12px var(--skt-glow); }
+  50%      { box-shadow: 0 0 0 4px #fff inset, 0 6px 14px rgba(0,0,0,.45), 0 0 26px var(--skt-glow); }
+}
+@keyframes pf-skt-shake {
+  0%,100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-58%, -50%); } 75% { transform: translate(-42%, -50%); }
+}

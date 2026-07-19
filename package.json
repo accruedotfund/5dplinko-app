@@ -1,0 +1,10 @@
+{
+  "name": "5dplinko-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "5dplinko.app — multiplayer physics Plinko on ProofNetwork",
+  "scripts": {
+    "start": "npx --yes serve -l 3000 .",
+    "deploy": "npx --yes vercel deploy --prod --yes"
+  }
+}
