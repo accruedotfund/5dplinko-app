@@ -1,24 +1,25 @@
 /**
- * 5dplinko.app — multiplayer pot Plinko on ProofNetwork.
+ * 5dplinko.app — multiplayer pot Plinko in FIVE DIMENSIONS.
  *
- * Shared house pot. Players bet SOL → VRF picks a bin (plinko-weighted) →
- * win = bet × mult (if pot can pay; else full refund). Reserve tracks max
- * outstanding liability for concurrent in-flight bets.
- *
- * Bins match FreeSol board mults: [25, 8, 3, 1, 0.5, 1, 3, 8, 25]
+ * Path is a 5-vector (d0..d4) ∈ [0,1]^5 from VRF. Bin index is the
+ * projection of that hyperspace walk onto 9 payout slots.
+ * Pot pays bet×mult, capped to cash on hand (thin pot OK).
  */
 
 const VRF_PRECISION = 1_000_000_000;
-// Binomial weights for 8-row plinko → 9 bins (C(8,k))
-const BIN_WEIGHTS = [1, 8, 28, 56, 70, 56, 28, 8, 1]; // sum 256
-// Thin-pot friendly mults (max 5×). Old FreeSol ×25 needs fat bankroll (0.05→1.25).
+const N_DIMS = 5;
+const N_BINS = 9;
+// Thin-pot mults (max 5×). No 25× / 1.25 SOL cold-start wall.
 const DEFAULT_MULTS = [5, 3, 2, 1.2, 0.6, 1.2, 2, 3, 5];
+// Soft center bias weights for 9 bins (not required for 5D map, used for docs)
+const BIN_WEIGHTS = [1, 8, 28, 56, 70, 56, 28, 8, 1];
 
 const state = {
   metadata: {
     name: "5dplinko",
-    description: "Multiplayer pot Plinko — bets, reserve, shared wins. 5dplinko.app",
-    version: "1.0.0",
+    description:
+      "5dplinko.app — five-dimensional multiplayer pot Plinko. Bets, reserve, shared wins.",
+    version: "2.0.0",
     author: "5dplinko",
     bounded: {
       "game.recent": { ring: 40 },
@@ -30,35 +31,33 @@ const state = {
   treasuryPublicKey: null,
 
   config: {
-    status: "setup", // setup | open | closed
+    status: "open",
     minBetSol: 0.01,
     maxBetSol: 2,
-    // house keeps this fraction of each bet into pot before roll (edge)
-    // wins pay mult of the FULL bet; edge is volume edge not haircut on wins
-    houseEdgeBps: 200, // 2% of bet stays as pure house on every drop
+    houseEdgeBps: 200,
     mults: DEFAULT_MULTS.slice(),
-    // if true, reject bets when free+bet < bet*maxMult (blocks cold start)
-    // default false: accept bets; refund full stake if pot can't pay the hit bin
+    dims: N_DIMS,
+    bins: N_BINS,
     enforceReserve: false,
   },
 
   pot: {
-    accruedSol: 0, // all bets in
-    reservedSol: 0, // open bets' max liability
+    accruedSol: 0,
+    reservedSol: 0,
     paidWinsSol: 0,
     refundedSol: 0,
-    houseTakenSol: 0, // edge skim
+    houseTakenSol: 0,
     drops: 0,
   },
 
   game: {
     nextDropId: 1,
-    recent: [], // ring of drops for multiplayer feed
-    openBets: {}, // dropId -> { from, bet, reserved, at }
+    recent: [],
+    openBets: {},
   },
 
   processed: {
-    betTx: {}, // txSignature -> drop result
+    betTx: {},
   },
 
   stats: {
@@ -68,7 +67,7 @@ const state = {
     refunds: 0,
     uniquePlayers: 0,
   },
-  players: {}, // wallet -> { drops, wagered, won }
+  players: {},
 };
 
 /**
@@ -81,12 +80,12 @@ function onDeploy(inputs) {
   state.admins = [inputs.deployer];
   const kp = blackbox.generateSolanaKeypair();
   state.treasuryPublicKey = kp.publicKey;
-  // open immediately for play
   state.config.status = "open";
   return {
     success: true,
-    message: "5dplinko deployed",
+    message: "5dplinko 5D pot deployed",
     treasury: state.treasuryPublicKey,
+    dims: N_DIMS,
     mults: state.config.mults,
   };
 }
@@ -147,41 +146,14 @@ async function configure(inputs) {
     if (b < 0 || b > 2000) throw new Error("houseEdgeBps 0..2000");
     state.config.houseEdgeBps = b;
   }
-  if (Array.isArray(inputs.mults) && inputs.mults.length === 9) {
+  if (Array.isArray(inputs.mults) && inputs.mults.length === N_BINS) {
     state.config.mults = inputs.mults.map(Number);
   }
-  if (typeof inputs.enforceReserve === "boolean") {
-    state.config.enforceReserve = inputs.enforceReserve;
-  }
   return { success: true, config: publicConfig() };
 }
 
 /**
- * openGame — admin
- * @param {Object} inputs
- */
-async function openGame(inputs) {
-  const g = gate(`plinko:open:${inputs.wallet || inputs.from}`, inputs, state.admins);
-  if (!g.ok) return g.challenge;
-  await consumeSig(g._sig);
-  state.config.status = "open";
-  return { success: true, config: publicConfig() };
-}
-
-/**
- * closeGame — admin
- * @param {Object} inputs
- */
-async function closeGame(inputs) {
-  const g = gate(`plinko:close:${inputs.wallet || inputs.from}`, inputs, state.admins);
-  if (!g.ok) return g.challenge;
-  await consumeSig(g._sig);
-  state.config.status = "closed";
-  return { success: true, config: publicConfig() };
-}
-
-/**
- * drop — multiplayer bet + VRF settle (2-step commerce.charge)
+ * drop — 5D bet + VRF settle (2-step commerce.charge)
  * @bounded
  * @param {Object} inputs
  * @param {string} inputs.from
@@ -189,7 +161,8 @@ async function closeGame(inputs) {
  * @param {string} [inputs.txSignature]
  */
 async function drop(inputs) {
-  const from = inputs.from;
+  // Coerce types — TypeBox union errors if buyer/sig arrive as objects
+  const from = walletStr(inputs.from);
   if (!from || from === "guest") throw new Error("wallet required");
   if (state.config.status !== "open") throw new Error("game not open");
 
@@ -201,62 +174,83 @@ async function drop(inputs) {
   }
 
   const maxMult = maxMultiplier();
-  // Reserve only what pot can actually pay after this bet lands (no 1.25 SOL cold-start wall)
   const free = freePotSol();
   const maxPayable = round6(free + bet);
   const maxLiability = round6(Math.min(bet * maxMult, maxPayable));
-  if (state.config.enforceReserve && maxLiability + 1e-12 < bet * 0.5) {
-    throw new Error(`pot too thin to open a drop (free ${free} SOL)`);
-  }
 
-  const paySig = inputs.txSignature || null;
+  // signature must be string | null (never an object / undefined)
+  const paySig = sigStr(inputs.txSignature);
   if (paySig && state.processed.betTx[paySig]) {
-    return { success: true, already: true, ...state.processed.betTx[paySig] };
+    const prev = state.processed.betTx[paySig];
+    return {
+      success: true,
+      already: true,
+      dropId: prev.dropId,
+      slot: prev.slot,
+      mult: prev.mult,
+      dims: prev.dims,
+      payoutSol: prev.payoutSol,
+      outcome: prev.outcome,
+      from: prev.from,
+      betSol: prev.betSol,
+    };
   }
 
+  // Exact shape from ProofNetwork commerce.charge docs + working unlocker
   const charge = await commerce.charge({
     buyer: from,
     amount: bet,
     priceCurrency: "SOL",
-    acceptedCurrencies: ["SOL"],
+    acceptedCurrencies: ["SOL", "USDC"],
     treasury: state.treasuryPublicKey,
-    memo: `plinko:drop:${from.slice(0, 8)}`,
-    signature: paySig || undefined,
+    memo: "plinko5d:drop",
+    signature: paySig, // null on step 1
   });
 
   if (charge.requiresPayment) {
+    // Return base64 string when possible so FE + TypeBox stay happy
+    // (charge.transaction is often { data: base64 })
     return {
       success: true,
       requiresPayment: true,
-      transaction: charge.transaction,
-      currency: charge.currency,
-      amount: charge.amount,
+      transaction: txPayload(charge.transaction),
+      currency: charge.currency || "SOL",
+      amount: Number(charge.amount) || bet,
       treasury: state.treasuryPublicKey,
       betSol: bet,
       maxWinSol: maxLiability,
-      mults: state.config.mults,
+      dims: N_DIMS,
     };
   }
   if (!charge.confirmed) return { success: false, message: "charge not confirmed" };
 
   const confirmedSig = charge.txSignature || paySig;
   if (confirmedSig && state.processed.betTx[confirmedSig]) {
-    return { success: true, already: true, ...state.processed.betTx[confirmedSig] };
+    const prev = state.processed.betTx[confirmedSig];
+    return {
+      success: true,
+      already: true,
+      dropId: prev.dropId,
+      slot: prev.slot,
+      mult: prev.mult,
+      dims: prev.dims,
+      payoutSol: prev.payoutSol,
+      outcome: prev.outcome,
+      from: prev.from,
+      betSol: prev.betSol,
+    };
   }
   if (confirmedSig && typeof signatures !== "undefined" && signatures.markUsed) {
-    await signatures.markUsed("plinko:drop:" + confirmedSig);
+    await signatures.markUsed("plinko5d:drop:" + confirmedSig);
   }
 
-  // credit pot
   state.pot.accruedSol = round6(state.pot.accruedSol + bet);
   state.stats.volumeSol = round6(state.stats.volumeSol + bet);
 
   const edge = round6((bet * (state.config.houseEdgeBps || 0)) / 10000);
   state.pot.houseTakenSol = round6(state.pot.houseTakenSol + edge);
 
-  // reserve worst-case until settled
   state.pot.reservedSol = round6(state.pot.reservedSol + maxLiability);
-
   const dropId = state.game.nextDropId++;
   state.game.openBets[String(dropId)] = {
     from,
@@ -265,23 +259,20 @@ async function drop(inputs) {
     at: Date.now(),
   };
 
-  // VRF → bin
+  // ── 5D path from VRF ────────────────────────────────────────────
+  // One VRF sample → expand to 5 independent unit coords via hash chain
   const roll = await vrfApi.selectNumber(1, VRF_PRECISION);
-  const slot = pickBin(roll.result);
+  const dims = expand5D(roll.result);
+  const slot = slotFrom5D(dims);
   const mult = Number(state.config.mults[slot]) || 0;
   let idealPayout = round6(bet * mult);
   let payout = idealPayout;
-  let outcome = "win";
-  let paySignature = null;
   let potCapped = false;
+  let paySignature = null;
 
-  // release reserve first
-  state.pot.reservedSol = round6(
-    Math.max(0, state.pot.reservedSol - maxLiability)
-  );
+  state.pot.reservedSol = round6(Math.max(0, state.pot.reservedSol - maxLiability));
   delete state.game.openBets[String(dropId)];
 
-  // Pay what the pot can actually cover — no "need 1.25 SOL" gate
   const cash = cashPotSol();
   if (payout > cash + 1e-9) {
     payout = cash;
@@ -295,38 +286,41 @@ async function drop(inputs) {
   } else {
     state.stats.losses += 1;
   }
-  if (potCapped) state.stats.refunds += 1; // reuse counter as "capped pays"
+  if (potCapped) state.stats.refunds += 1;
 
   state.pot.drops += 1;
   trackPlayer(from, bet, payout);
 
-  const finalOutcome = potCapped ? "capped" : outcome;
+  const finalOutcome = potCapped ? "capped" : "win";
   const result = {
     success: true,
     dropId,
     from,
     betSol: bet,
+    dims, // length-5 unit vector — FE renders 5D path
     slot,
     mult,
     payoutSol: payout,
+    idealPayoutSol: idealPayout,
     profitSol: round6(payout - bet),
     outcome: finalOutcome,
     potCapped,
-    idealPayoutSol: idealPayout,
     edgeSol: edge,
     paySignature,
     vrfProof: roll.proof,
     rng: roll.result,
+    pathSeed: roll.result,
     txSignature: confirmedSig,
     pot: publicPot(),
-    pathSeed: roll.result, // FE uses for animation
   };
+
   pushRecent({
     dropId,
     from,
     betSol: bet,
     slot,
     mult,
+    dims,
     payoutSol: payout,
     outcome: finalOutcome,
     at: Date.now(),
@@ -337,6 +331,7 @@ async function drop(inputs) {
       dropId,
       slot,
       mult,
+      dims,
       payoutSol: payout,
       outcome: finalOutcome,
       from,
@@ -352,6 +347,7 @@ async function drop(inputs) {
         betSol: bet,
         slot,
         mult,
+        dims,
         payoutSol: payout,
         outcome: finalOutcome,
       });
@@ -365,7 +361,7 @@ async function drop(inputs) {
 }
 
 /**
- * getLobby — pot + config + recent (multiplayer surface)
+ * getLobby
  */
 function getLobby() {
   return {
@@ -378,34 +374,27 @@ function getLobby() {
       slot,
       mult,
       weight: BIN_WEIGHTS[slot],
-      pApprox: BIN_WEIGHTS[slot] / 256,
     })),
+    dims: N_DIMS,
   };
 }
 
-/**
- * getPot
- */
+/** @returns {Object} */
 function getPot() {
   return publicPot();
 }
 
-/**
- * getConfig
- */
+/** @returns {Object} */
 function getConfig() {
   return publicConfig();
 }
 
-/**
- * getRecent
- */
+/** @returns {Object} */
 function getRecent() {
   return { recent: state.game.recent.slice(-40).reverse() };
 }
 
 /**
- * getPlayer
  * @param {Object} inputs
  */
 function getPlayer(inputs) {
@@ -414,7 +403,7 @@ function getPlayer(inputs) {
 }
 
 /**
- * withdrawHouse — admin free pot only (not reserved)
+ * withdrawHouse — admin free pot only
  * @param {Object} inputs
  */
 async function withdrawHouse(inputs) {
@@ -428,25 +417,50 @@ async function withdrawHouse(inputs) {
   }
   const dest = inputs.destination || g.wallet;
   const paySignature = await payFromTreasury(dest, amount);
-  // account as paid (reduces cash)
   state.pot.paidWinsSol = round6(state.pot.paidWinsSol + amount);
   return { success: true, amount, destination: dest, paySignature, pot: publicPot() };
 }
 
-// ─── internals ───────────────────────────────────────────────────────────
+// ─── 5D math ─────────────────────────────────────────────────────────────
 
 /**
+ * Expand one VRF u32-ish sample into 5 independent unit floats via LCG.
  * @internal
+ * @param {number} seed
+ * @returns {number[]}
  */
-function pickBin(rng) {
-  // rng in 1..VRF_PRECISION
-  const total = BIN_WEIGHTS.reduce((a, b) => a + b, 0);
-  let x = ((rng - 1) / VRF_PRECISION) * total;
-  for (let i = 0; i < BIN_WEIGHTS.length; i++) {
-    x -= BIN_WEIGHTS[i];
-    if (x < 0) return i;
+function expand5D(seed) {
+  let s = (Number(seed) >>> 0) || 1;
+  const dims = [];
+  for (let i = 0; i < N_DIMS; i++) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    dims.push(s / 4294967296);
   }
-  return BIN_WEIGHTS.length - 1;
+  return dims;
+}
+
+/**
+ * Map 5D point → bin 0..8.
+ * Each dim is a "left/right" through that dimension; sum of steps ~ Binomial(5)
+ * remapped into 9 slots for the payout rail.
+ * @internal
+ * @param {number[]} dims
+ * @returns {number}
+ */
+function slotFrom5D(dims) {
+  // 5 binary decisions → score 0..5, then stretch to 0..8
+  let score = 0;
+  for (let i = 0; i < N_DIMS; i++) {
+    if (dims[i] >= 0.5) score += 1;
+  }
+  // score 0..5 → slots emphasizing center: map via (score/5)*8
+  const slot = Math.min(N_BINS - 1, Math.max(0, Math.round((score / N_DIMS) * (N_BINS - 1))));
+  // mix fractional parts for finer spread (avoid only 6 discrete outcomes)
+  let frac = 0;
+  for (let i = 0; i < N_DIMS; i++) frac += dims[i];
+  frac = frac / N_DIMS;
+  const jitter = Math.floor((frac - 0.5) * 3); // -1,0,1-ish
+  return Math.min(N_BINS - 1, Math.max(0, slot + jitter));
 }
 
 /**
@@ -457,18 +471,15 @@ function maxMultiplier() {
 }
 
 /**
- * @internal cash on hand
+ * @internal
  */
 function cashPotSol() {
-  const raw =
-    state.pot.accruedSol -
-    state.pot.paidWinsSol -
-    state.pot.refundedSol;
+  const raw = state.pot.accruedSol - state.pot.paidWinsSol - state.pot.refundedSol;
   return Math.max(0, round6(raw));
 }
 
 /**
- * @internal free after reserve
+ * @internal
  */
 function freePotSol() {
   return Math.max(0, round6(cashPotSol() - state.pot.reservedSol));
@@ -525,7 +536,6 @@ function pushRecent(row) {
  */
 function publicPot() {
   const cash = cashPotSol();
-  const free = freePotSol();
   return {
     accruedSol: state.pot.accruedSol,
     reservedSol: state.pot.reservedSol,
@@ -533,7 +543,7 @@ function publicPot() {
     refundedSol: state.pot.refundedSol,
     houseTakenSol: state.pot.houseTakenSol,
     cashSol: cash,
-    freeSol: free,
+    freeSol: freePotSol(),
     drops: state.pot.drops,
     maxMult: maxMultiplier(),
   };
@@ -549,9 +559,10 @@ function publicConfig() {
     maxBetSol: state.config.maxBetSol,
     houseEdgeBps: state.config.houseEdgeBps,
     mults: state.config.mults.slice(),
+    dims: N_DIMS,
+    bins: N_BINS,
     enforceReserve: state.config.enforceReserve,
     treasury: state.treasuryPublicKey,
-    bins: 9,
   };
 }
 
@@ -560,4 +571,60 @@ function publicConfig() {
  */
 function round6(n) {
   return Math.floor(Number(n) * 1e6 + 1e-9) / 1e6;
+}
+
+/**
+ * Coerce wallet / pubkey-ish values to base58 string.
+ * PublicKey objects → toBase58/toString; anything else stringified carefully.
+ * @internal
+ * @param {*} w
+ * @returns {string|null}
+ */
+function walletStr(w) {
+  if (w == null || w === "") return null;
+  if (typeof w === "string") return w;
+  if (typeof w === "object") {
+    if (typeof w.toBase58 === "function") return w.toBase58();
+    if (typeof w.toString === "function") {
+      const s = w.toString();
+      if (s && s !== "[object Object]") return s;
+    }
+    if (typeof w.publicKey === "string") return w.publicKey;
+    if (typeof w.address === "string") return w.address;
+  }
+  return null;
+}
+
+/**
+ * Payment sig must be string | null for commerce.charge TypeBox union.
+ * @internal
+ * @param {*} s
+ * @returns {string|null}
+ */
+function sigStr(s) {
+  if (s == null || s === "") return null;
+  if (typeof s === "string") return s;
+  if (typeof s === "object") {
+    if (typeof s.signature === "string") return s.signature;
+    if (typeof s.txSignature === "string") return s.txSignature;
+  }
+  return null;
+}
+
+/**
+ * Normalize commerce.charge transaction for the client.
+ * Prefer plain base64 string; fall back to original object.
+ * @internal
+ * @param {*} tx
+ * @returns {string|Object|null}
+ */
+function txPayload(tx) {
+  if (tx == null) return null;
+  if (typeof tx === "string") return tx;
+  if (typeof tx === "object") {
+    if (typeof tx.data === "string") return tx.data;
+    if (typeof tx.serialized === "string") return tx.serialized;
+    if (typeof tx.transaction === "string") return tx.transaction;
+  }
+  return tx;
 }
